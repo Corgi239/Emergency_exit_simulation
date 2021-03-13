@@ -2,12 +2,14 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import logic.Vector2d
 import org.scalactic.Equality
+import org.scalactic.TolerantNumerics
 
 
 class Vector2dTest extends AnyFlatSpec with Matchers {
 
+  val epsilon = 1e-4
+  implicit val doubleEq = TolerantNumerics.tolerantDoubleEquality(epsilon)
   implicit val tupleOfDoublesEq: Equality[(Double, Double)] = (a: (Double, Double), b: Any) => {
-    val epsilon = 1e-4
     b match {
       case t: (Double, Double) => (a._1 === t._1 +- epsilon) & (a._2 === t._2 +- epsilon)
       case _ => false
@@ -32,6 +34,19 @@ class Vector2dTest extends AnyFlatSpec with Matchers {
     assert(scaledVector.coordinates === (2.5 * 4.2, -7.9 * 4.2))
     scaledVector = testVector * -0.3
     assert(scaledVector.coordinates === (2.5 * -0.3, -7.9 * -0.3))
+  }
+
+  "Vector" should "calculate its magnitude correctly" in {
+    var testVector = Vector2d(3.0, 4.0)
+    assert(testVector.magnitude === 5.0)
+    testVector = Vector2d(-12.0, 16.0)
+    assert(testVector.magnitude === 20.0)
+  }
+
+  "Vector" should "normalize correctly" in {
+    val testVector = Vector2d(4.0, -3.0)
+    val normalizedVector = testVector.normalize()
+    assert(normalizedVector.coordinates === (0.8, -0.6))
   }
 
 }

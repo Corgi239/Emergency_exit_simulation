@@ -21,11 +21,13 @@ class Vector2dTest extends AnyFlatSpec with Matchers {
     assert(testVector.coordinates === (2.0, 3.5))
   }
 
-  "The sum of two vectors" should "store the correct coordinates" in {
+  "The sum and difference of two vectors" should "store the correct coordinates" in {
     val testVector1 = Vector2d(1.1, -3.2)
     val testVector2 = Vector2d(0.9, 4.0)
     val sumVector = testVector1 + testVector2
     assert(sumVector.coordinates === (2.0, 0.8))
+    val diffVector = testVector1 - testVector2
+    assert(diffVector.coordinates === (0.2, -7.2))
   }
 
   "Vector" should "scale correctly" in {
@@ -47,6 +49,15 @@ class Vector2dTest extends AnyFlatSpec with Matchers {
     val testVector = Vector2d(4.0, -3.0)
     val normalizedVector = testVector.normalize()
     assert(normalizedVector.coordinates === (0.8, -0.6))
+  }
+
+  "Vector" should "cap magnitude correctly" in {
+    var testVector = Vector2d(7.3, 2.1)
+    var cappedVector = testVector.capMagnitude(1.0)
+    assert(cappedVector.coordinates === testVector.normalize().coordinates)
+    testVector = Vector2d(0.2, 0.3)
+    cappedVector = testVector.capMagnitude(1.0)
+    assert(cappedVector.coordinates === testVector.coordinates)
   }
 
 }

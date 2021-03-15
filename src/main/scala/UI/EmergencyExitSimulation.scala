@@ -38,9 +38,13 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   }
 
+  private val personDiameter = 20
   private def drawPerson(g: Graphics2D, coords: (Double, Double)) = {
-    val personDiameter = 10
-    g.fillOval(coords._1.toInt, coords._2.toInt, personDiameter, personDiameter)
+    def getXcoords(x: Double): Array[Int] = Array(x, x - personDiameter * math.sqrt(3) / 4, x, x + personDiameter * math.sqrt(3) / 4).map ( _.toInt )
+    def getYcoords(y: Double): Array[Int] = Array(y, y + personDiameter / 4, y - personDiameter, y + personDiameter / 4).map ( _.toInt )
+    g.fillPolygon(getXcoords(coords._1), getYcoords(coords._2), 4)
+    //g.fillOval(coords._1.toInt, coords._2.toInt, personDiameter, personDiameter)
+
   }
 
   private val simulationPanel = new Panel {

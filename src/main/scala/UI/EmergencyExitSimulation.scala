@@ -19,6 +19,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   )
 
   private val room = Room(testCoords)
+  room.people.foreach( b => b.giveBrain(new TestBrain(b)) )
 
   def top = new MainFrame {
     title = "Emergency Exit Simulation"
@@ -38,7 +39,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   }
 
   private def drawPerson(g: Graphics2D, coords: (Double, Double)) = {
-    val personDiameter = 20
+    val personDiameter = 10
     g.fillOval(coords._1.toInt, coords._2.toInt, personDiameter, personDiameter)
   }
 

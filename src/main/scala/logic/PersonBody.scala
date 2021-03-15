@@ -3,7 +3,9 @@ package logic
 class PersonBody(var location: Vector2d) {
 
  private var brain: Option[PersonBrain] = None
- private var currentVelocity: Vector2d = Vector2d(0.01, 0.02)
+ private var currentVelocity: Vector2d = Vector2d(1, 2)
+
+ def giveBrain(brain: PersonBrain) = this.brain = Some(brain)
 
  def updateVelocity() = {
   brain match {
@@ -18,6 +20,6 @@ class PersonBody(var location: Vector2d) {
 }
 
 object PersonBody {
-  private val MAX_ACC: Double = 0.1
-  private val MAX_SPD: Double = 1.0
+  private val MAX_ACC: Double = 0.005
+  private val MAX_SPD: Double = 0.02
 }

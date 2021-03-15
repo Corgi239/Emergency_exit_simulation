@@ -5,7 +5,7 @@ class Room(val people: Vector[PersonBody]) {
   def coordinateList = people.map( _.location.coordinates )
 
   def step(timePassed: Double) = {
-    people.foreach( _.updateVelocity() )
+    people.foreach( _.updateVelocity(timePassed) )
     people.foreach( _.move(timePassed) )
   }
 

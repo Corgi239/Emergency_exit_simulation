@@ -9,7 +9,7 @@ import scala.swing._
 
 object EmergencyExitSimulation extends SimpleSwingApplication{
 
-  private val timeDelta = 6
+  private val timeDelta = 10
 
   private val testCoords = Vector(
     (20.0, 20.0),

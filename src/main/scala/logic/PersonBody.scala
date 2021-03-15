@@ -3,7 +3,7 @@ package logic
 class PersonBody(var location: Vector2d) {
 
  private var brain: Option[PersonBrain] = None
- private var currentVelocity: Vector2d = Vector2d(0.0, 0.0)
+ private var currentVelocity: Vector2d = Vector2d(0.01, 0.02)
 
  def updateVelocity() = {
   brain match {

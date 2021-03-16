@@ -1,0 +1,22 @@
+
+16.03.2021
+Phases 1 and 2 of the project are completed.
+The simulation functions well enough to facilitate the development and testing of the model.
+The project is progressing as scheduled. In my technical plan I expected to be finished with phase 2 by either mid-March or end of March, so I am staying true to my more optimistic prognosis :)
+
+The datastructure Vector2d is implemented and fully tested with Unit tests.
+The GUI object (EmergencyExitSimulation) is completed on a basic level. Further development in phase 4.
+The functionality of the Room and PersonBody classes is completed, barring their interactions with PersonBrain, which will be developed in phase 3.
+
+The developement is progressing surprisingly smoothly so far. I encountered some difficulties with setting up the project and importing the two needed eternal libraries. I ended up starting a new project with SBT instead of the IDEA based project, which made it a lot easier to import libraries.
+Another snag I had to deal with was connected with testing the Vector2d class - I had to find a way to work with Double values in assert statements. Knowledge about implicit classes ended up coming in handy.
+I estimate the total workload at 15 hours so far, including research.
+
+Questions:
+
+1) A warning appears during compilation, not sure what I am supposed to do with it
+(Class JavaLaunchHelper is implemented in both /Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/bin/java (0x10ccb34c0) and /Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/libinstrument.dylib (0x10cd314e0). One of the two will be used. Which one is undefined.)
+
+2) So far I have implemented both updating the simulation and redrawing it on the screen in the same thread. I am not sure how to diagnose whether that is currently causing any slowdowns/errors.
+
+3) I am somewhat confused by some of the directories and files that IDEA generates automatically as part of creating an SBT project. I am ok with just ignoring it so far (I do not include most of them in my VCS commits), but I'd love to find a way to learn more about the purpose of those.

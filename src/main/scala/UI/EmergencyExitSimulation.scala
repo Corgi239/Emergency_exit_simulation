@@ -41,10 +41,12 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val personDiameter = 20.0
   private val boidShapeX: Array[Int] = Array(0, -personDiameter * math.sqrt(3) / 4, 0, personDiameter * math.sqrt(3) / 4).map ( _.toInt )
   private val boidShapeY: Array[Int] = Array(0, personDiameter / 4, -personDiameter, personDiameter / 4).map ( _.toInt )
-  private def drawPerson(g: Graphics2D, coords: (Double, Double)) = {
+  private def drawPerson(g: Graphics2D, person: PersonBody) = {
+    val coords = person.location.coordinates
+    val theta = math.Pi - person.facing
     val oldTransform = g.getTransform
     g.translate(coords._1, coords._2)
-    g.rotate(3.14)
+    g.rotate(theta)
     g.fillPolygon(boidShapeX, boidShapeY, 4)
     g.setTransform(oldTransform)
   }
@@ -52,7 +54,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val simulationPanel = new Panel {
     override def paintComponent(g: Graphics2D) = {
       g.setColor(Color.darkGray)
-      room.coordinateList.foreach( drawPerson(g, _) )
+      room.people.foreach( drawPerson(g, _) )
     }
   }
 }

@@ -2,20 +2,22 @@ package logic
 
 class PersonBody(var location: Vector2d) {
 
- private var brain: Option[PersonBrain] = None
- private var currentVelocity: Vector2d = Vector2d(1, 2)
+  private var brain: Option[PersonBrain] = None
+  private var currentVelocity: Vector2d = Vector2d(1, 2)
 
- def giveBrain(brain: PersonBrain) = this.brain = Some(brain)
+  def giveBrain(brain: PersonBrain) = this.brain = Some(brain)
 
- def updateVelocity(timePassed: Double) = {
-  brain match {
-   case Some(brain) =>
-      currentVelocity = currentVelocity + ((brain.targetVelocity() - currentVelocity).capMagnitude(PersonBody.MAX_ACC) * timePassed)
-   case None =>
+  def updateVelocity(timePassed: Double) = {
+    brain match {
+      case Some(brain) =>
+        currentVelocity = currentVelocity + ((brain.targetVelocity() - currentVelocity).capMagnitude(PersonBody.MAX_ACC) * timePassed)
+      case None =>
+    }
   }
- }
 
- def move(timePassed: Double) = location += currentVelocity * (PersonBody.MAX_SPD * timePassed)
+  def move(timePassed: Double) = location += currentVelocity * (PersonBody.MAX_SPD * timePassed)
+
+  def facing = math.atan2(currentVelocity.x, currentVelocity.y)
 
 }
 

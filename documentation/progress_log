@@ -20,3 +20,5 @@ Questions:
 2) So far I have implemented both updating the simulation and redrawing it on the screen in the same thread. I am not sure how to diagnose whether that is currently causing any slowdowns/errors.
 
 3) I am somewhat confused by some of the directories and files that IDEA generates automatically as part of creating an SBT project. I am ok with just ignoring it so far (I do not include most of them in my VCS commits), but I'd love to find a way to learn more about the purpose of those.
+
+4) I wonder if the animations on the webpage http://www.red3d.com/cwr/steer/Doorway.html are still viewable somehow.

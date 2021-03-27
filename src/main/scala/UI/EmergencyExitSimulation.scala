@@ -9,6 +9,11 @@ import scala.swing._
 
 object EmergencyExitSimulation extends SimpleSwingApplication{
 
+  private val roomWidth = 800
+  private val roomHeight = 600
+  private val margin = 10
+  private val headerBarHeight = 30
+
   private val timeDelta = 10
 
   private val testCoords = Vector(
@@ -20,13 +25,13 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     (550.0, 380.0)
   )
 
-  private val room = Room(testCoords)
+  private val room = Room(testCoords, roomWidth, roomHeight)
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
 
   def top = new MainFrame {
     title = "Emergency Exit Simulation"
     contents = simulationPanel
-    size = new Dimension(820, 620)
+    size = new Dimension(roomWidth + margin * 2, roomHeight + margin * 2 + headerBarHeight)
 
     def listener = new ActionListener {
       override def actionPerformed(e: ActionEvent): Unit = {
@@ -55,10 +60,14 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private val simulationPanel = new Panel {
     override def paintComponent(g: Graphics2D) = {
+      g.translate(margin, margin)
+      g.setColor(Color.black)
+      g.drawRect(0, 0, roomWidth, roomHeight)
       g.setColor(Color.red)
       g.drawLine(room.exitLocation.coordinates._1.toInt, room.exitLocation.coordinates._2.toInt, room.exitLocation.coordinates._1.toInt, (room.exitLocation.coordinates._2 + room.exitLength).toInt)
       g.setColor(Color.darkGray)
       room.people.foreach( drawPerson(g, _) )
+      g.translate(-margin, -margin)
     }
   }
 }

@@ -1,6 +1,6 @@
 package logic
 
-class Room(coords: Vector[(Double, Double)], val exitLocation: Vector2d, val exitLength: Double) {
+class Room(coords: Vector[(Double, Double)],val roomWidth: Double, val roomHeight: Double, val exitLocation: Vector2d, val exitLength: Double) {
 
   val people = coords.map( p => Vector2d(p._1, p._2) ).map( new PersonBody(_, this) )
 
@@ -17,8 +17,8 @@ class Room(coords: Vector[(Double, Double)], val exitLocation: Vector2d, val exi
 
 object Room {
 
-  def apply(coords: Vector[(Double, Double)], exitLocation: Vector2d = Vector2d(810, 310), exitLength: Double = 50.0): Room = {
-    new Room(coords, exitLocation, exitLength)
+  def apply(coords: Vector[(Double, Double)], roomWidth: Double, roomHeight: Double, exitLength: Double = 50.0): Room = {
+    new Room(coords, roomWidth, roomHeight, Vector2d(roomWidth, roomHeight / 2), exitLength)
   }
 
 }

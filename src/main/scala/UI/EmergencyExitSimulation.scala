@@ -15,16 +15,18 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     (20.0, 20.0),
     (40.0, 80.0),
     (50.0, 120.0),
-    (350.0, 200.0)
+    (350.0, 200.0),
+    (700.0, 100.0),
+    (550.0, 380.0)
   )
 
   private val room = Room(testCoords)
-  room.people.foreach( b => b.giveBrain(new TestBrain(b)) )
+  room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
 
   def top = new MainFrame {
     title = "Emergency Exit Simulation"
     contents = simulationPanel
-    size = new Dimension(800, 600)
+    size = new Dimension(820, 620)
 
     def listener = new ActionListener {
       override def actionPerformed(e: ActionEvent): Unit = {
@@ -53,6 +55,8 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private val simulationPanel = new Panel {
     override def paintComponent(g: Graphics2D) = {
+      g.setColor(Color.red)
+      g.drawLine(room.exitLocation.coordinates._1.toInt, room.exitLocation.coordinates._2.toInt, room.exitLocation.coordinates._1.toInt, (room.exitLocation.coordinates._2 + room.exitLength).toInt)
       g.setColor(Color.darkGray)
       room.people.foreach( drawPerson(g, _) )
     }

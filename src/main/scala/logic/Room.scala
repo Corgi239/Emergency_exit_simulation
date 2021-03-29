@@ -1,8 +1,10 @@
 package logic
 
+import scala.collection.mutable
+
 class Room(coords: Vector[(Double, Double)],val roomWidth: Double, val roomHeight: Double, val exitLocation: Vector2d, val exitLength: Double) {
 
-  val people = coords.map( p => Vector2d(p._1, p._2) ).map( new PersonBody(_, this) )
+  var people: mutable.Buffer[PersonBody] = coords.map(p => Vector2d(p._1, p._2) ).map( new PersonBody(_, this) ).toBuffer
 
   def coordinateList = people.map( _.location.coordinates )
 
@@ -11,6 +13,7 @@ class Room(coords: Vector[(Double, Double)],val roomWidth: Double, val roomHeigh
   def step(timePassed: Double) = {
     people.foreach( _.updateVelocity(timePassed) )
     people.foreach( _.move(timePassed) )
+    people = people.filter( _.location.x < roomWidth)
   }
 
 }

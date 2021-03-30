@@ -16,8 +16,8 @@ class Room(coords: Vector[(Double, Double)],val roomWidth: Double, val roomHeigh
     people = people.filter( _.location.x < roomWidth)
   }
 
-  def neighbors(point: Vector2d, radius: Double): Vector[PersonBody] = {
-     people.filter( _.location.distance(point) <= radius ).filter( _.location.distance(point) > 0 ).toVector
+  def neighbors(point: Vector2d, radius: Double): Vector[(PersonBody, Double)] = {
+    (people zip people.map( _.location.distance(point) )).filter( _._2 <= radius ).filter( _._2 > 0).toVector
   }
 
 }

@@ -14,7 +14,7 @@ class SimpleExitBrain(body: PersonBody) extends PersonBrain(body) {
 
     def scalingFunction(dist: Double): Double = 1.0 / math.pow(dist, 2)
 
-    body.getNeighbors.map(body.location - _.location).map(v => v * scalingFunction(v.magnitude) ).foldLeft(Vector2d(0, 0))( _ + _ )
+    body.getNeighbors.map( p => (body.location - p._1.location) * scalingFunction(p._2)).foldLeft(Vector2d(0, 0))( _ + _ )
 
   }
 

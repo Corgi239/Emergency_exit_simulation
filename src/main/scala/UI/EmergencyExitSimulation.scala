@@ -15,15 +15,29 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val headerBarHeight = 30
 
   private val timeDelta = 10
+  private val fps = 60
 
+/*
   private val testCoords = Vector(
     (20.0, 20.0),
+    (22.0, 22.0),
+    (19.0, 18.0),
+    (17.0, 24.0),
+    (15.0, 35.0),
+    (24.0, 14.0),
+    (30.0, 20.0),
+    (40.0, 20.0),
     (40.0, 80.0),
     (50.0, 120.0),
     (350.0, 200.0),
     (700.0, 100.0),
     (550.0, 380.0)
   )
+
+
+ */
+
+  private val testCoords = ((30 to 750 by 30).map( _.toDouble ).flatMap( i => ((30 to 350 by 30).map( _.toDouble ).map( j => (i, j) )))).toVector
 
   private val room = Room(testCoords, roomWidth, roomHeight)
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
@@ -33,19 +47,26 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     contents = simulationPanel
     size = new Dimension(roomWidth + margin * 2, roomHeight + margin * 2 + headerBarHeight)
 
-    def listener = new ActionListener {
+    def redrawer = new ActionListener {
       override def actionPerformed(e: ActionEvent): Unit = {
-        room.step(timeDelta)
         simulationPanel.repaint()
       }
     }
 
-    val mainTimer = new javax.swing.Timer(timeDelta, listener)
-    mainTimer.start()
+    def updater = new ActionListener {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        room.step(timeDelta)
+      }
+    }
+
+    val drawingTimer = new javax.swing.Timer(1000 / fps, redrawer)
+    val updatingTimer = new javax.swing.Timer(timeDelta, updater)
+    updatingTimer.start()
+    drawingTimer.start()
 
   }
 
-  private val personDiameter = 20.0
+  private val personDiameter = 10.0
   private val boidShapeX: Array[Int] = Array(0, -personDiameter * math.sqrt(3) / 4, 0, personDiameter * math.sqrt(3) / 4).map ( _.toInt )
   private val boidShapeY: Array[Int] = Array(0, personDiameter / 4, -personDiameter, personDiameter / 4).map ( _.toInt )
   private def drawPerson(g: Graphics2D, person: PersonBody) = {

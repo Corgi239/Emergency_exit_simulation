@@ -3,9 +3,10 @@ package logic
 class PersonBody(var location: Vector2d, room: Room) {
 
   private var brain: Option[PersonBrain] = None
-  private var currentVelocity: Vector2d = Vector2d(-1, 2).capMagnitude(PersonBody.MAX_SPD)
+  private var currentVelocity: Vector2d = Vector2d(0, 0)
 
   def getExitMiddle = room.exitMiddle
+  def getNeighbors = room.neighbors(this.location, PersonBody.searchRadius)
 
   def giveBrain(brain: PersonBrain) = this.brain = Some(brain)
 
@@ -26,4 +27,5 @@ class PersonBody(var location: Vector2d, room: Room) {
 object PersonBody {
   private val MAX_ACC: Double = 0.0001
   private val MAX_SPD: Double = 0.05
+  private val searchRadius = 30.0
 }

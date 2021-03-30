@@ -60,4 +60,10 @@ class Vector2dTest extends AnyFlatSpec with Matchers {
     assert(cappedVector.coordinates === testVector.coordinates)
   }
 
+  "Vector" should "calculate the distance between two points correctly" in {
+    val testVector1 = Vector2d(1.1, -3.2)
+    val testVector2 = Vector2d(0.9, 4.0)
+    assert(testVector1.distance(testVector2) === math.sqrt(0.2 * 0.2 + 7.2 * 7.2))
+  }
+
 }

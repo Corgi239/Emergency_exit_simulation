@@ -10,5 +10,6 @@ case class Vector2d(var x: Double, var y: Double) {
   def capMagnitude(cap: Double) = this * math.min(1.0, cap/this.magnitude)
 
   def coordinates = (this.x, this.y)
+  def distance(other: Vector2d) = math.hypot(this.x - other.x, this.y - other.y)
 
 }

@@ -35,6 +35,8 @@ Questions:
 
 1) Possibly any recomentadtions on the data structure to use for optimising the neighbor search?
 
+EDIT: I have found some potentially useful data structures, chief among them - the quadtree. It seems that implementing one would take quite a bit of time and effort, do you think it might be worth doing for this project?
+
 P.S.
 
 Thank you very much for taking the time to answer my previous questions, it was a huge help in resolving some of the issues and staying motivated.

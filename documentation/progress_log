@@ -26,7 +26,7 @@ Questions:
 
 31.03.2021
 
-These two weeks I was unable to work on the project as much as I would ahve hoped for. A deadline for the Machine Learning project forced me to reallocate some time to that course, and some personal problems mounted on top of that, which reulted in me now lagging somewhat behind schedule.
+These two weeks I was unable to work on the project as much as I would have hoped for. A deadline for the Machine Learning project forced me to reallocate some time to that course, and some personal problems mounted on top of that, which reulted in me now lagging somewhat behind schedule.
 Nevertheless, I was able to make good progress on implementing the logic of the simulaiton. I have the seeking and separation components working, and most of the groundwork done for the braking component.
 As some of the heavy computation is already taking place at this stage, I was able to start stress-testing the system with larger rooms and more people. The results are.. less than stellar - the simulation slows down significantly. I have been thinking a lot about potential data structures that would allow for quicker search of neighbors, but so far have come up empty.
 I estimate the workload for these two weeks around 10 hours.

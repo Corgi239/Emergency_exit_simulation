@@ -4,8 +4,9 @@ import logic._
 
 import java.awt.Color
 import java.awt.event.{ActionEvent, ActionListener}
+import scala.collection.mutable
 import scala.swing._
-import scala.swing.event.{ButtonClicked, EditDone}
+import scala.swing.event.{ButtonClicked, ValueChanged}
 
 
 object EmergencyExitSimulation extends SimpleSwingApplication{
@@ -15,7 +16,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val margin = 10
   private val headerBarHeight = 30
   private val buttonsBarHeight = 30
-  private val adjusterWidth = 200
+  private val adjusterWidth = 350
 
   private val timeDelta = 30
   private val fps = 60
@@ -63,11 +64,24 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   }
 
   val resetButton = new Button("Reset simulation")
-  val speedField = new TextField(room.roomMaxSpeed.toString) {
-    columns = 10
-  }
+  val speedSlider = new Slider {
+        orientation = Orientation.Horizontal
+        min   = 0
+        max   = 20
+        value = 10
+        majorTickSpacing = 2
+        paintTicks = true
+
+        val labelTable = mutable.HashMap[Int, Label]()
+        labelTable += min    -> new Label("slow")
+        labelTable += (max - min + 1) / 2  -> new Label("meduim")
+        labelTable += max        -> new Label("fast")
+
+        labels = labelTable
+        paintLabels = true
+   }
   val parameterAdjustment = new BoxPanel(Orientation.Vertical) {
-    val speedAdjustment = new FlowPanel(new Label("Speed: "), speedField)
+    val speedAdjustment = new FlowPanel(new Label("Maximum speed: "), speedSlider)
     contents += speedAdjustment
   }
 
@@ -86,7 +100,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   val drawingTimer = new javax.swing.Timer(1000 / fps, redrawer)
   val updatingTimer = new javax.swing.Timer(timeDelta, updater)
   this.listenTo(resetButton)
-  this.listenTo(speedField)
+  this.listenTo(speedSlider)
   this.reactions += {
     case clickEvent: ButtonClicked =>
       val clickedButton = clickEvent.source
@@ -96,19 +110,15 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
           this.resetSimulation()
           updatingTimer.start()
       }
-    case editEvent: EditDone =>
-      val editedField = editEvent.source
-      editedField match {
-        case speedField => {
-          val inputeUdpdSpeed = try { Some(speedField.text.toDouble) } catch { case e: NumberFormatException => None }
-          inputeUdpdSpeed match {
-            case Some(d: Double) =>
-              room.setMaxSpeed(d)
-            case None =>
-              speedField.text = "Invalid speed"
+    case valueChange: ValueChanged =>
+      val slider = valueChange.source.asInstanceOf[Slider]
+      slider match {
+        case speedSlider =>
+          if (!slider.adjusting) {
+             room.setMaxSpeed(slider.value.toDouble * 0.005)
           }
-        }
       }
+
   }
   updatingTimer.start()
   drawingTimer.start()

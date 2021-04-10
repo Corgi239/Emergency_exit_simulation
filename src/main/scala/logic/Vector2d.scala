@@ -11,5 +11,10 @@ case class Vector2d(var x: Double, var y: Double) {
 
   def coordinates = (this.x, this.y)
   def distance(other: Vector2d) = math.hypot(this.x - other.x, this.y - other.y)
+  def angleBetween(other: Vector2d) = {
+    val angle1 = Math.atan2(this.y, this.x)
+    val angle2 = Math.atan2(other.y, other.x)
+    (angle2 - angle1).toDegrees
+  }
 
 }

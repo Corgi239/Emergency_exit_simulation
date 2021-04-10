@@ -66,4 +66,26 @@ class Vector2dTest extends AnyFlatSpec with Matchers {
     assert(testVector1.distance(testVector2) === math.sqrt(0.2 * 0.2 + 7.2 * 7.2))
   }
 
+  "Vector" should "calculate the angle between two vectors correctly" in {
+    var testVector1 = Vector2d(0, 1)
+    var testVector2 = Vector2d(1, 0)
+    assert(testVector1.angleBetween(testVector2) === -90.0)
+
+    testVector1 = Vector2d(1, 0)
+    testVector2 = Vector2d(0, 1)
+    assert(testVector1.angleBetween(testVector2) === 90.0)
+
+    testVector1 = Vector2d(1, 1)
+    testVector2 = Vector2d(1, 0)
+    assert(testVector1.angleBetween(testVector2) === -45.0)
+
+    testVector1 = Vector2d(1, 1)
+    testVector2 = Vector2d(-1, 1)
+    assert(testVector1.angleBetween(testVector2) === 90.0)
+
+    testVector1 = Vector2d(1, 0)
+    testVector2 = Vector2d(-1, 0)
+    assert(testVector1.angleBetween(testVector2) === 180.0)
+  }
+
 }

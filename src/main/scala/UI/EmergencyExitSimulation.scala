@@ -5,6 +5,7 @@ import logic._
 import java.awt.Color
 import java.awt.event.{ActionEvent, ActionListener}
 import scala.swing._
+import scala.swing.event.ButtonClicked
 
 
 object EmergencyExitSimulation extends SimpleSwingApplication{
@@ -13,8 +14,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val roomHeight = 600
   private val margin = 10
   private val headerBarHeight = 30
+  private val buttonsBarHeight = 30
 
-  private val timeDelta = 10
+  private val timeDelta = 30
   private val fps = 60
 
 /*
@@ -33,38 +35,56 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     (700.0, 100.0),
     (550.0, 380.0)
   )
+*/
 
+  private val testCoords = (((30 to 350 by 30) ++ (420 to 710 by 30)).map( _.toDouble ).flatMap( i => (((130 to 200 by 30) ++ (280 to 380 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
 
- */
-
-  private val testCoords = ((30 to 750 by 30).map( _.toDouble ).flatMap( i => ((30 to 350 by 30).map( _.toDouble ).map( j => (i, j) )))).toVector
-
-  private val room = Room(testCoords, roomWidth, roomHeight)
+  private var room = Room(testCoords, roomWidth, roomHeight)
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
 
+  private def resetSimulation() = {
+    this.room = Room(testCoords, roomWidth, roomHeight)
+    room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
+  }
+
+  val resetButton = new Button("Reset simulation")
   def top = new MainFrame {
     title = "Emergency Exit Simulation"
-    contents = simulationPanel
-    size = new Dimension(roomWidth + margin * 2, roomHeight + margin * 2 + headerBarHeight)
-
-    def redrawer = new ActionListener {
-      override def actionPerformed(e: ActionEvent): Unit = {
-        simulationPanel.repaint()
-      }
+    contents = new BorderPanel {
+      add(resetButton, BorderPanel.Position.South)
+      add(simulationPanel, BorderPanel.Position.Center)
     }
-
-    def updater = new ActionListener {
-      override def actionPerformed(e: ActionEvent): Unit = {
-        room.step(timeDelta)
-      }
-    }
-
-    val drawingTimer = new javax.swing.Timer(1000 / fps, redrawer)
-    val updatingTimer = new javax.swing.Timer(timeDelta, updater)
-    updatingTimer.start()
-    drawingTimer.start()
-
+    size = new Dimension(roomWidth + margin * 2, roomHeight + margin * 2 + headerBarHeight + buttonsBarHeight)
   }
+
+  def redrawer = new ActionListener {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      simulationPanel.repaint()
+    }
+  }
+
+  def updater = new ActionListener {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      room.step(timeDelta)
+    }
+  }
+
+  val drawingTimer = new javax.swing.Timer(1000 / fps, redrawer)
+  val updatingTimer = new javax.swing.Timer(timeDelta, updater)
+  this.listenTo(resetButton)
+  this.reactions += {
+    case clickEvent: ButtonClicked =>
+      val clickedButton = clickEvent.source
+      clickedButton match {
+        case resetButton => {
+          updatingTimer.stop()
+          this.resetSimulation()
+          updatingTimer.start()
+        }
+      }
+  }
+  updatingTimer.start()
+  drawingTimer.start()
 
   private val personDiameter = 10.0
   private val boidShapeX: Array[Int] = Array(0, -personDiameter * math.sqrt(3) / 4, 0, personDiameter * math.sqrt(3) / 4).map ( _.toInt )

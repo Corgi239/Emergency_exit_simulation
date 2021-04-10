@@ -27,5 +27,5 @@ class PersonBody(var location: Vector2d, room: Room) {
 object PersonBody {
   private val MAX_ACC: Double = 0.0001
   private val MAX_SPD: Double = 0.05
-  private val searchRadius = 30.0
+  private val searchRadius = 25.0
 }

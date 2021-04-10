@@ -76,11 +76,10 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     case clickEvent: ButtonClicked =>
       val clickedButton = clickEvent.source
       clickedButton match {
-        case resetButton => {
+        case resetButton =>
           updatingTimer.stop()
           this.resetSimulation()
           updatingTimer.start()
-        }
       }
   }
   updatingTimer.start()

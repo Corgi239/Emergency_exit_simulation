@@ -5,7 +5,7 @@ import logic._
 import java.awt.Color
 import java.awt.event.{ActionEvent, ActionListener}
 import scala.swing._
-import scala.swing.event.ButtonClicked
+import scala.swing.event.{ButtonClicked, EditDone}
 
 
 object EmergencyExitSimulation extends SimpleSwingApplication{
@@ -15,6 +15,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val margin = 10
   private val headerBarHeight = 30
   private val buttonsBarHeight = 30
+  private val adjusterWidth = 200
 
   private val timeDelta = 30
   private val fps = 60
@@ -43,18 +44,31 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
 
   private def resetSimulation() = {
+    val roomSpeed = room.roomMaxSpeed
     this.room = Room(testCoords, roomWidth, roomHeight)
     room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
+    room.setMaxSpeed(roomSpeed)
+    println("reset. Max speed: " + roomSpeed )
   }
 
-  val resetButton = new Button("Reset simulation")
+
   def top = new MainFrame {
     title = "Emergency Exit Simulation"
     contents = new BorderPanel {
       add(resetButton, BorderPanel.Position.South)
       add(simulationPanel, BorderPanel.Position.Center)
+      add(parameterAdjustment, BorderPanel.Position.East)
     }
-    size = new Dimension(roomWidth + margin * 2, roomHeight + margin * 2 + headerBarHeight + buttonsBarHeight)
+    size = new Dimension(roomWidth + margin * 2 + adjusterWidth, roomHeight + margin * 2 + headerBarHeight + buttonsBarHeight)
+  }
+
+  val resetButton = new Button("Reset simulation")
+  val speedField = new TextField(room.roomMaxSpeed.toString) {
+    columns = 10
+  }
+  val parameterAdjustment = new BoxPanel(Orientation.Vertical) {
+    val speedAdjustment = new FlowPanel(new Label("Speed: "), speedField)
+    contents += speedAdjustment
   }
 
   def redrawer = new ActionListener {
@@ -72,6 +86,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   val drawingTimer = new javax.swing.Timer(1000 / fps, redrawer)
   val updatingTimer = new javax.swing.Timer(timeDelta, updater)
   this.listenTo(resetButton)
+  this.listenTo(speedField)
   this.reactions += {
     case clickEvent: ButtonClicked =>
       val clickedButton = clickEvent.source
@@ -80,6 +95,19 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
           updatingTimer.stop()
           this.resetSimulation()
           updatingTimer.start()
+      }
+    case editEvent: EditDone =>
+      val editedField = editEvent.source
+      editedField match {
+        case speedField => {
+          val inputeUdpdSpeed = try { Some(speedField.text.toDouble) } catch { case e: NumberFormatException => None }
+          inputeUdpdSpeed match {
+            case Some(d: Double) =>
+              room.setMaxSpeed(d)
+            case None =>
+              speedField.text = "Invalid speed"
+          }
+        }
       }
   }
   updatingTimer.start()
@@ -90,7 +118,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val boidShapeY: Array[Int] = Array(0, personDiameter / 4, -personDiameter, personDiameter / 4).map ( _.toInt )
   private def drawPerson(g: Graphics2D, person: PersonBody) = {
     val coords = person.location.coordinates
-    val theta = math.Pi - person.facing
+    val theta = person.facing + Math.PI / 2
     val oldTransform = g.getTransform
     g.translate(coords._1, coords._2)
     g.rotate(theta)

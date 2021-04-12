@@ -5,7 +5,8 @@ case class Vector2d(var x: Double, var y: Double) {
   def +(other: Vector2d) = Vector2d(this.x + other.x, this.y + other.y)
   def -(other: Vector2d) = Vector2d(this.x - other.x, this.y - other.y)
   def *(scale: Double) = Vector2d(this.x * scale, this.y * scale)
-  def magnitude = math.hypot(this.x, this.y)
+  def clockwise() = Vector2d(-this.y, this.x)
+  def counterclockwise() = Vector2d(this.y, -this.x)
   def normalize() = {
     if (!this.isZero) this * (1.0/this.magnitude) else Vector2d.ZeroVector()
   }
@@ -13,6 +14,7 @@ case class Vector2d(var x: Double, var y: Double) {
     if (!this.isZero) this * math.min(1.0, cap/this.magnitude) else Vector2d.ZeroVector()
   }
 
+  def magnitude = math.hypot(this.x, this.y)
   def coordinates = (this.x, this.y)
   def distance(other: Vector2d) = math.hypot(this.x - other.x, this.y - other.y)
   def angleBetween(other: Vector2d) = {

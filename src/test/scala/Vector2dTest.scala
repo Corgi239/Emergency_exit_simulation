@@ -88,4 +88,13 @@ class Vector2dTest extends AnyFlatSpec with Matchers {
     assert(testVector1.angleBetween(testVector2) === 180.0)
   }
 
+  "Vector" should "rotate correctly" in {
+    var testVector = Vector2d(1, 1)
+    val clock = testVector.clockwise()
+    assert(clock.coordinates === (-1.0, 1.0))
+    val counterclock = testVector.counterclockwise()
+    assert(counterclock.coordinates === (1.0, -1.0))
+
+  }
+
 }

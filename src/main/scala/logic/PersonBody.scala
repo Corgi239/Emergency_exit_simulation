@@ -8,12 +8,17 @@ class PersonBody(var location: Vector2d, room: Room) {
   private var maxAcc: Double = 0.0001
   private var maxSpd: Double = 0.05
   private var searchRadius = 25.0
+  private val containmentProbeDistance = 20.0
 
   def maxSpeed = maxSpd
   def setMaxSpeed(updMaxSpd: Double) = maxSpd = updMaxSpd
 
   def getExitMiddle = room.exitMiddle
   def getNeighbors = room.neighbors(this.location, searchRadius)
+  def getContainmentNormal: Vector2d = {
+    val probe = this.location + (currentVelocity.normalize() * containmentProbeDistance)
+    room.getBoundaryNormal(probe)
+  }
 
   def giveBrain(brain: PersonBrain) = this.brain = Some(brain)
 

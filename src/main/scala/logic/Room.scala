@@ -48,7 +48,7 @@ class Room(coords: Vector[(Double, Double)],val roomWidth: Double, val roomHeigh
 
 object Room {
 
-  def apply(coords: Vector[(Double, Double)], roomWidth: Double, roomHeight: Double, exitLength: Double = 50.0): Room = {
+  def apply(coords: Vector[(Double, Double)], roomWidth: Double, roomHeight: Double, exitLength: Double = 30.0): Room = {
     new Room(coords, roomWidth, roomHeight, Vector2d(roomWidth, roomHeight / 2), exitLength)
   }
 

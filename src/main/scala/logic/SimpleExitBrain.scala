@@ -3,7 +3,8 @@ package logic
 class SimpleExitBrain(body: PersonBody) extends PersonBrain(body) {
 
   var seekingWeight: Double = 10.0
-  var separationWeight: Double = 20.0
+  var separationWeight: Double = 40.0
+  var containmentWeight: Double = 20.0
 
   private def seekingComponent: Vector2d = {
     val goalLocation = body.getExitMiddle
@@ -18,6 +19,8 @@ class SimpleExitBrain(body: PersonBody) extends PersonBrain(body) {
 
   }
 
-  override def targetVelocity(): Vector2d = (seekingComponent * seekingWeight) + (separationComponent * separationWeight)
+  private def containmentComponent: Vector2d = body.getContainmentNormal
+
+  override def targetVelocity(): Vector2d = (seekingComponent * seekingWeight) + (separationComponent * separationWeight) + (containmentComponent * containmentWeight)
 
 }

@@ -9,17 +9,21 @@ class PersonBody(var location: Vector2d, room: Room) {
   private var maxSpd: Double = 0.05
   private var searchRadius = 25.0
   private val containmentProbeDistance = 5.0
+  private val fov = 45.0
 
   def maxSpeed = maxSpd
   def setMaxSpeed(updMaxSpd: Double) = maxSpd = updMaxSpd
 
   def getExitMiddle = room.exitMiddle
+
   def getNeighbors = room.neighbors(this.location, searchRadius)
+  def getNeighborsInfront = this.getNeighbors.filter( p => Math.abs(p._1.location.angleBetween(this.location)) <= fov )
+
   def getContainmentNormal: Vector2d = {
     val probe1 = this.location + (currentVelocity.normalize() * containmentProbeDistance)
     val probe2 = this.location + ((currentVelocity.clockwise() + currentVelocity).normalize() * (containmentProbeDistance * 2))
     val probe3 = this.location + ((currentVelocity.counterclockwise() + currentVelocity).normalize() * (containmentProbeDistance * 2))
-    room.getBoundaryNormal(probe1) + room.getBoundaryNormal(probe2) + room.getBoundaryNormal(probe3)
+    (room.getBoundaryNormal(probe1) * 3) + room.getBoundaryNormal(probe2) + room.getBoundaryNormal(probe3)
   }
 
   def giveBrain(brain: PersonBrain) = this.brain = Some(brain)
@@ -36,6 +40,7 @@ class PersonBody(var location: Vector2d, room: Room) {
 
   def facing = math.atan2(currentVelocity.y, currentVelocity.x)
 
+  def gasRatio = Math.min(this.currentVelocity.magnitude / maxSpd, 1)
 }
 
 

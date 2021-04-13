@@ -40,3 +40,17 @@ EDIT: I have found some potentially useful data structures, chief among them - t
 P.S.
 
 Thank you very much for taking the time to answer my previous questions, it was a huge help in resolving some of the issues and staying motivated.
+
+
+13.04.2021
+
+The project is nearing compleation. The four steering behaviors have been inmplemented, although some work is still needed to tune them.
+The UI is what I will be targeting next. I have already figured out a way to set it up, all (or most of) the research is done, now it's just a matter of replicating the work I have done for various tunable parameters of the simulation.
+After that I will need to implement part of the project that conserns files, hope that doesn't take too long. Overall I am behind schedule at this point, but only ever so slighty.
+Workload these two weeks: 15 hours.
+
+Questions:
+
+1) I have added this project to my CV, is it ok if I make the project public in gitlab?
+
+2) The simulation still doesn't look stellar in temrs of realism. I do have avenues which I plan to explore in order to imrove the accuracy of the simulated behaviours, but any tips would be much appreciated.

@@ -39,7 +39,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   )
 */
 
-  private val testCoords = (((30 to 350 by 30) ++ (420 to 710 by 30)).map( _.toDouble ).flatMap( i => (((130 to 200 by 30) ++ (280 to 380 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
+  private val testCoords = (((620 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
 
   private var room = Room(testCoords, roomWidth, roomHeight)
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
@@ -51,7 +51,6 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     room.setMaxSpeed(roomSpeed)
     println("reset. Max speed: " + roomSpeed )
   }
-
 
   def top = new MainFrame {
     title = "Emergency Exit Simulation"

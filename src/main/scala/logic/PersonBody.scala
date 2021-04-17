@@ -3,16 +3,17 @@ package logic
 class PersonBody(var location: Vector2d, room: Room) {
 
   private var brain: Option[PersonBrain] = None
-  private var currentVelocity: Vector2d = Vector2d(0, 0)
+  private var currentVelocity: Vector2d = Vector2d(1, 0)
 
   private var maxAcc: Double = 0.0001
   private var maxSpd: Double = 0.05
-  private var searchRadius = 25.0
+  private var searchRadius = 25.0 + 5
   private val containmentProbeDistance = 5.0
   private val fov = 45.0
 
   def maxSpeed = maxSpd
   def setMaxSpeed(updMaxSpd: Double) = maxSpd = updMaxSpd
+  def setSearchRadius(updRadius: Double) = searchRadius = updRadius
 
   def getExitMiddle = room.exitMiddle
 
@@ -40,7 +41,7 @@ class PersonBody(var location: Vector2d, room: Room) {
 
   def facing = math.atan2(currentVelocity.y, currentVelocity.x)
 
-  def gasRatio = Math.min(this.currentVelocity.magnitude / maxSpd, 1)
+  def gasRatio = this.currentVelocity.magnitude / maxSpd
 }
 
 

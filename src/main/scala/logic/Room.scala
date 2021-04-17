@@ -11,9 +11,14 @@ class Room(coords: Vector[(Double, Double)],val roomWidth: Double, val roomHeigh
   def exitMiddle = exitLocation + Vector2d(0.0, exitLength / 2)
 
   var roomMaxSpeed = 0.05
+  var roomSearchRadius = 25.0
   def setMaxSpeed(updSpeed: Double) = {
     roomMaxSpeed = updSpeed
     people.foreach( _.setMaxSpeed(updSpeed) )
+  }
+  def setSearchRadius(updRadius: Double) = {
+    roomSearchRadius = updRadius
+    people.foreach( _.setSearchRadius(updRadius) )
   }
 
   def step(timePassed: Double) = {

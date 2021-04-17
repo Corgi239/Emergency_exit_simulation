@@ -46,10 +46,12 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private def resetSimulation() = {
     val roomSpeed = room.roomMaxSpeed
+    val roomSearchRadius = room.roomSearchRadius
     this.room = Room(testCoords, roomWidth, roomHeight)
     room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
     room.setMaxSpeed(roomSpeed)
-    println("reset. Max speed: " + roomSpeed )
+    room.setSearchRadius(roomSearchRadius)
+    println("Reset. Speed: " + roomSpeed + " Search Radius: " + roomSearchRadius)
   }
 
   def top = new MainFrame {
@@ -78,10 +80,27 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
         labels = labelTable
         paintLabels = true
-   }
+  }
+  val searchRadiusSlider = new Slider {
+        orientation = Orientation.Horizontal
+        min   = 5
+        max   = 50
+        value = 25
+        majorTickSpacing = 5
+        paintTicks = true
+
+        val labelTable = mutable.HashMap[Int, Label]()
+        labelTable += min    -> new Label("5")
+        labelTable += max        -> new Label("50")
+
+        labels = labelTable
+        paintLabels = true
+  }
   val parameterAdjustment = new BoxPanel(Orientation.Vertical) {
     val speedAdjustment = new FlowPanel(new Label("Maximum speed: "), speedSlider)
+    val searchRadiusAdjustment = new FlowPanel(new Label("Search radius: "), searchRadiusSlider)
     contents += speedAdjustment
+    contents += searchRadiusAdjustment
   }
 
   def redrawer = new ActionListener {
@@ -100,6 +119,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   val updatingTimer = new javax.swing.Timer(timeDelta, updater)
   this.listenTo(resetButton)
   this.listenTo(speedSlider)
+  this.listenTo(searchRadiusSlider)
   this.reactions += {
     case clickEvent: ButtonClicked =>
       val clickedButton = clickEvent.source
@@ -111,10 +131,17 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
       }
     case valueChange: ValueChanged =>
       val slider = valueChange.source.asInstanceOf[Slider]
-      slider match {
-        case speedSlider =>
+      valueChange.source match {
+
+        case s if s == speedSlider =>
           if (!slider.adjusting) {
-             room.setMaxSpeed(slider.value.toDouble * 0.005)
+            room.setMaxSpeed(slider.value.toDouble * 0.005)
+          }
+
+
+        case s if s == searchRadiusSlider =>
+          if (!slider.adjusting) {
+             room.setSearchRadius(slider.value.toDouble)
           }
       }
 
@@ -131,6 +158,8 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     val oldTransform = g.getTransform
     g.translate(coords._1, coords._2)
     g.rotate(theta)
+    val brightness = (0.5 * Math.max(0, Math.min(person.gasRatio, 1))).toFloat
+    g.setColor(new Color(brightness, brightness, brightness))
     g.fillPolygon(boidShapeX, boidShapeY, 4)
     g.setTransform(oldTransform)
   }
@@ -142,7 +171,6 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
       g.drawRect(0, 0, roomWidth, roomHeight)
       g.setColor(Color.red)
       g.drawLine(room.exitLocation.coordinates._1.toInt, room.exitLocation.coordinates._2.toInt, room.exitLocation.coordinates._1.toInt, (room.exitLocation.coordinates._2 + room.exitLength).toInt)
-      g.setColor(Color.darkGray)
       room.people.foreach( drawPerson(g, _) )
       g.translate(-margin, -margin)
     }

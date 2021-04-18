@@ -39,19 +39,16 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   )
 */
 
-  private val testCoords = (((620 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
+  private val testCoords = (((420 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
 
   private var room = Room(testCoords, roomWidth, roomHeight)
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
 
   private def resetSimulation() = {
-    val roomSpeed = room.roomMaxSpeed
-    val roomSearchRadius = room.roomSearchRadius
-    this.room = Room(testCoords, roomWidth, roomHeight)
-    room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
-    room.setMaxSpeed(roomSpeed)
-    room.setSearchRadius(roomSearchRadius)
-    println("Reset. Speed: " + roomSpeed + " Search Radius: " + roomSearchRadius)
+    val config = room.config
+    this.room = new Room(testCoords, config)
+    room.init()
+    println("Reset\n" + config.toString)
   }
 
   def top = new MainFrame {
@@ -170,7 +167,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
       g.setColor(Color.black)
       g.drawRect(0, 0, roomWidth, roomHeight)
       g.setColor(Color.red)
-      g.drawLine(room.exitLocation.coordinates._1.toInt, room.exitLocation.coordinates._2.toInt, room.exitLocation.coordinates._1.toInt, (room.exitLocation.coordinates._2 + room.exitLength).toInt)
+      g.drawLine(room.config.exitLocation.coordinates._1.toInt, room.config.exitLocation.coordinates._2.toInt, room.config.exitLocation.coordinates._1.toInt, (room.config.exitLocation.coordinates._2 + room.config.exitLength).toInt)
       room.people.foreach( drawPerson(g, _) )
       g.translate(-margin, -margin)
     }

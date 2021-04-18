@@ -4,12 +4,13 @@ class PersonBody(var location: Vector2d, room: Room) {
 
   private var brain: Option[PersonBrain] = None
   private var currentVelocity: Vector2d = Vector2d(1, 0)
+  private var brakingCoefficient: Double = 1.0
 
   private var maxAcc: Double = 0.0001
   private var maxSpd: Double = 0.05
   private var searchRadius = 25.0 + 5
   private val containmentProbeDistance = 5.0
-  private val fov = 45.0
+  private val fov = 30.0
 
   def maxSpeed = maxSpd
   def setMaxSpeed(updMaxSpd: Double) = maxSpd = updMaxSpd
@@ -18,7 +19,10 @@ class PersonBody(var location: Vector2d, room: Room) {
   def getExitMiddle = room.exitMiddle
 
   def getNeighbors = room.neighbors(this.location, searchRadius)
-  def getNeighborsInfront = this.getNeighbors.filter( p => Math.abs(p._1.location.angleBetween(this.location)) <= fov )
+  def getNeighborsInfront = {
+    val res = this.getNeighbors.filter( p => Math.abs(p._1.location.angleBetween(this.location)) <= fov )
+    res
+  }
 
   def getContainmentNormal: Vector2d = {
     val probe1 = this.location + (currentVelocity.normalize() * containmentProbeDistance)
@@ -32,16 +36,21 @@ class PersonBody(var location: Vector2d, room: Room) {
   def updateVelocity(timePassed: Double) = {
     brain match {
       case Some(brain) =>
-        currentVelocity = (currentVelocity + ((brain.targetVelocity() - currentVelocity).capMagnitude(maxAcc) * timePassed)).capMagnitude(maxSpd)
+        currentVelocity = (currentVelocity + ((brain.targetVelocity - currentVelocity).capMagnitude(maxAcc) * timePassed)).capMagnitude(maxSpd)
+        brakingCoefficient = brain.brakingCoefficient
       case None =>
     }
   }
 
-  def move(timePassed: Double) = location += currentVelocity * timePassed
+  def move(timePassed: Double) = location += currentVelocity * timePassed * brakingCoefficient
 
   def facing = math.atan2(currentVelocity.y, currentVelocity.x)
 
-  def gasRatio = this.currentVelocity.magnitude / maxSpd
+  def gasRatioBeforeBraking = this.currentVelocity.magnitude / maxSpd
+
+  def gasRatio = gasRatioBeforeBraking * brakingCoefficient
+
 }
+
 
 

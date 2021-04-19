@@ -28,12 +28,12 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
 
   def step(timePassed: Double) = {
     people.par.foreach( _.updateVelocity(timePassed) )
-    people.foreach( _.move(timePassed) )
+    people.par.foreach( _.move(timePassed) )
     people = people.filter( _.location.x < config.roomWidth)
   }
 
   def neighbors(point: Vector2d, radius: Double): Vector[(PersonBody, Double)] = {
-    (people zip people.map( _.location.distance(point) )).filter( _._2 <= radius ).filter( _._2 > 0).toVector
+    (people zip people.par.map( _.location.distance(point) )).filter( _._2 <= radius ).filter( _._2 > 0).toVector
   }
 
   def getBoundaryNormal(point: Vector2d): Vector2d = {

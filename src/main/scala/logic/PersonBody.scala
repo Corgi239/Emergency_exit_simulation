@@ -42,7 +42,12 @@ class PersonBody(var location: Vector2d, room: Room) {
     }
   }
 
-  def move(timePassed: Double) = location += currentVelocity * timePassed * brakingCoefficient
+  def move(timePassed: Double) = {
+    location += currentVelocity * timePassed * brakingCoefficient
+    if (room.getBoundaryNormal(this.location) != Vector2d(0, 0)) {
+      this.location.x = Math.min(this.location.x, room.config.roomWidth - 0.1)
+    }
+  }
 
   def facing = math.atan2(currentVelocity.y, currentVelocity.x)
 

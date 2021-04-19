@@ -39,10 +39,11 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   )
 */
 
-  private val testCoords = (((420 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
+  private val testCoords = (((120 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
 
   private var room = Room(testCoords, roomWidth, roomHeight)
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
+  resetSimulation()
 
   private def resetSimulation() = {
     val config = room.config

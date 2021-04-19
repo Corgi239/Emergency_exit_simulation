@@ -1,6 +1,7 @@
 package logic
 
 import scala.collection.mutable
+import scala.collection.parallel.CollectionConverters._
 
 class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
 
@@ -26,7 +27,7 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
   }
 
   def step(timePassed: Double) = {
-    people.foreach( _.updateVelocity(timePassed) )
+    people.par.foreach( _.updateVelocity(timePassed) )
     people.foreach( _.move(timePassed) )
     people = people.filter( _.location.x < config.roomWidth)
   }

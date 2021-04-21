@@ -142,17 +142,35 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         labels = labelTable
         paintLabels = true
   }
+  val exitSizeSlider = new Slider {
+        orientation = Orientation.Horizontal
+        min   = 5
+        max   = 50
+        value = (room.config.exitSize * 100).toInt
+        majorTickSpacing = 5
+        paintTicks = true
+
+        val labelTable = mutable.HashMap[Int, Label]()
+        labelTable += min    -> new Label("5%")
+        labelTable += 50     -> new Label("25%")
+        labelTable += max    -> new Label("50%")
+
+        labels = labelTable
+        paintLabels = true
+  }
   val parameterAdjustment = new BoxPanel(Orientation.Vertical) {
     val speedAdjustment = new FlowPanel(new Label("Maximum speed: "), speedSlider)
     val searchRadiusAdjustment = new FlowPanel(new Label("Search radius: "), searchRadiusSlider)
     val seekingComponentAdjustment = new FlowPanel(new Label("Seeking component weight: "), seekingComponentSlider)
     val separationComponentAdjustment = new FlowPanel(new Label("Separation component weight: "), separationComponentSlider)
     val containmentComponentAdjustment = new FlowPanel(new Label("Containment component weight: "), containmentComponentSlider)
+    val exitSizeAdjustment = new FlowPanel(new Label("Exit size (as % of the right wall: "), exitSizeSlider)
     contents += speedAdjustment
     contents += searchRadiusAdjustment
     contents += seekingComponentAdjustment
     contents += separationComponentAdjustment
     contents += containmentComponentAdjustment
+    contents += exitSizeAdjustment
   }
 
   def redrawer = new ActionListener {
@@ -175,6 +193,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   this.listenTo(seekingComponentSlider)
   this.listenTo(separationComponentSlider)
   this.listenTo(containmentComponentSlider)
+  this.listenTo(exitSizeSlider)
   this.reactions += {
     case clickEvent: ButtonClicked =>
       val clickedButton = clickEvent.source
@@ -208,6 +227,10 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
           if (!slider.adjusting) {
              room.setLogicParameters(Map("containmentWeight" -> slider.value.toDouble))
           }
+        case s if s == exitSizeSlider =>
+          if (!slider.adjusting) {
+             room.setExitSize(slider.value.toDouble / 100)
+          }
       }
 
   }
@@ -235,7 +258,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
       g.setColor(Color.black)
       g.drawRect(0, 0, roomWidth, roomHeight)
       g.setColor(Color.red)
-      g.drawLine(room.config.exitLocation.coordinates._1.toInt, room.config.exitLocation.coordinates._2.toInt, room.config.exitLocation.coordinates._1.toInt, (room.config.exitLocation.coordinates._2 + room.config.exitLength).toInt)
+      g.drawLine(room.config.exitLocation.x.toInt, room.config.exitLocation.y.toInt, room.config.exitLocation.x.toInt, (room.config.exitLocation.y + room.config.exitSize * room.config.roomHeight).toInt)
       room.people.foreach( drawPerson(g, _) )
       g.translate(-margin, -margin)
     }

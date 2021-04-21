@@ -15,7 +15,7 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
 
   def coordinateList = people.map( _.location.coordinates )
 
-  def exitMiddle = config.exitLocation + Vector2d(0.0, config.exitLength / 2)
+  def exitMiddle = config.exitLocation + Vector2d(0.0, config.exitSize * config.roomHeight / 2)
 
   def setMaxSpeed(updSpeed: Double) = {
     config.maxSpeed = updSpeed
@@ -28,6 +28,10 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
 
   def setLogicParameters(params: Map[String, Double]) = {
     people.foreach( _.setLogicParameters(params) )
+  }
+
+  def setExitSize(updSize: Double) = {
+    config.exitSize = updSize
   }
 
   def step(timePassed: Double) = {
@@ -45,7 +49,7 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
     var yComponent = 0.0
     if (point.x <= 0) {
        xComponent = 1.0
-    } else if (point.x >= config.roomWidth && (point.y <= config.exitLocation.y || point.y >= (config.exitLocation.y + config.exitLength))) {
+    } else if (point.x >= config.roomWidth && (point.y <= config.exitLocation.y || point.y >= (config.exitLocation.y + config.exitSize * config.roomHeight))) {
       xComponent = -1.0
     }
 
@@ -62,8 +66,8 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
 
 object Room {
 
-  def apply(coords: Vector[(Double, Double)], roomWidth: Double, roomHeight: Double, exitLength: Double = 30.0): Room = {
-    new Room(coords, new RoomConfig(roomWidth, roomHeight, Vector2d(roomWidth, roomHeight / 2), exitLength))
+  def apply(coords: Vector[(Double, Double)], roomWidth: Double, roomHeight: Double, exitSize: Double = 0.05): Room = {
+    new Room(coords, new RoomConfig(roomWidth, roomHeight, Vector2d(roomWidth, roomHeight * (0.5 - exitSize / 2)), exitSize))
   }
 
 }
@@ -71,11 +75,11 @@ object Room {
 class RoomConfig(val roomWidth: Double,
                  val roomHeight: Double,
                  val exitLocation: Vector2d,
-                 val exitLength: Double,
+                 var exitSize: Double = 0.05,
                  var maxSpeed: Double = 0.05,
                  var searchRadius: Double = 25.0,
                  var seekingWeight: Double = 20.0,
                  var separationWeight: Double = 120.0,
                  var containmentWeight: Double = 30.0) {
-  override def toString: String = "Current room settings:\n" + s"Dimentions: ${roomWidth}x${roomHeight}\nExit of length $exitLength at $exitLocation\nMax speed: $maxSpeed\nSearch radius: $searchRadius"
+  override def toString: String = "Current room settings:\n" + s"Dimentions: ${roomWidth}x${roomHeight}\nExit of length $exitSize at $exitLocation\nMax speed: $maxSpeed\nSearch radius: $searchRadius"
 }

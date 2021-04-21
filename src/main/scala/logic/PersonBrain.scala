@@ -6,4 +6,6 @@ abstract class PersonBrain(val body: PersonBody) {
 
   def brakingCoefficient: Double = 1.0
 
+  def setLogicParameters(params: Map[String, Double]) = {}
+
 }

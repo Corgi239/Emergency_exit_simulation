@@ -15,6 +15,12 @@ class PersonBody(var location: Vector2d, room: Room) {
   def maxSpeed = maxSpd
   def setMaxSpeed(updMaxSpd: Double) = maxSpd = updMaxSpd
   def setSearchRadius(updRadius: Double) = searchRadius = updRadius
+  def setLogicParameters(params: Map[String, Double]) = {
+    brain match {
+      case Some(b: PersonBrain) => b.setLogicParameters(params)
+      case None =>
+    }
+  }
 
   def getExitMiddle = room.exitMiddle
 

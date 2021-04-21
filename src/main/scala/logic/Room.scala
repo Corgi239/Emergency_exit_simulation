@@ -26,6 +26,10 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
     people.foreach( _.setSearchRadius(updRadius) )
   }
 
+  def setLogicParameters(params: Map[String, Double]) = {
+    people.foreach( _.setLogicParameters(params) )
+  }
+
   def step(timePassed: Double) = {
     people.par.foreach( _.updateVelocity(timePassed) )
     people.par.foreach( _.move(timePassed) )
@@ -64,6 +68,14 @@ object Room {
 
 }
 
-class RoomConfig(val roomWidth: Double, val roomHeight: Double, val exitLocation: Vector2d, val exitLength: Double, var maxSpeed: Double = 0.05, var searchRadius: Double = 25.0) {
+class RoomConfig(val roomWidth: Double,
+                 val roomHeight: Double,
+                 val exitLocation: Vector2d,
+                 val exitLength: Double,
+                 var maxSpeed: Double = 0.05,
+                 var searchRadius: Double = 25.0,
+                 var seekingWeight: Double = 20.0,
+                 var separationWeight: Double = 120.0,
+                 var containmentWeight: Double = 30.0) {
   override def toString: String = "Current room settings:\n" + s"Dimentions: ${roomWidth}x${roomHeight}\nExit of length $exitLength at $exitLocation\nMax speed: $maxSpeed\nSearch radius: $searchRadius"
 }

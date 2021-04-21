@@ -16,7 +16,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val margin = 10
   private val headerBarHeight = 30
   private val buttonsBarHeight = 30
-  private val adjusterWidth = 350
+  private val adjusterWidth = 420
 
   private val timeDelta = 30
   private val fps = 60
@@ -67,7 +67,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         orientation = Orientation.Horizontal
         min   = 0
         max   = 20
-        value = 10
+        value = (room.config.maxSpeed * 200).toInt
         majorTickSpacing = 2
         paintTicks = true
 
@@ -83,7 +83,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         orientation = Orientation.Horizontal
         min   = 5
         max   = 50
-        value = 25
+        value = room.config.searchRadius.toInt
         majorTickSpacing = 5
         paintTicks = true
 
@@ -94,11 +94,65 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         labels = labelTable
         paintLabels = true
   }
+  val seekingComponentSlider = new Slider {
+        orientation = Orientation.Horizontal
+        min   = 0
+        max   = 100
+        value = room.config.seekingWeight.toInt
+        majorTickSpacing = 10
+        paintTicks = true
+
+        val labelTable = mutable.HashMap[Int, Label]()
+        labelTable += min    -> new Label("0")
+        labelTable += 50     -> new Label("5")
+        labelTable += max    -> new Label("10")
+
+        labels = labelTable
+        paintLabels = true
+  }
+  val separationComponentSlider = new Slider {
+        orientation = Orientation.Horizontal
+        min   = 0
+        max   = 200
+        value = room.config.separationWeight.toInt
+        majorTickSpacing = 20
+        paintTicks = true
+
+        val labelTable = mutable.HashMap[Int, Label]()
+        labelTable += min    -> new Label("0")
+        labelTable += 100     -> new Label("5")
+        labelTable += max    -> new Label("10")
+
+        labels = labelTable
+        paintLabels = true
+  }
+  val containmentComponentSlider = new Slider {
+        orientation = Orientation.Horizontal
+        min   = 0
+        max   = 100
+        value = room.config.containmentWeight.toInt
+        majorTickSpacing = 10
+        paintTicks = true
+
+        val labelTable = mutable.HashMap[Int, Label]()
+        labelTable += min    -> new Label("0")
+        labelTable += 50     -> new Label("5")
+        labelTable += max    -> new Label("10")
+
+        labels = labelTable
+        paintLabels = true
+  }
   val parameterAdjustment = new BoxPanel(Orientation.Vertical) {
     val speedAdjustment = new FlowPanel(new Label("Maximum speed: "), speedSlider)
     val searchRadiusAdjustment = new FlowPanel(new Label("Search radius: "), searchRadiusSlider)
+    val seekingComponentAdjustment = new FlowPanel(new Label("Seeking component weight: "), seekingComponentSlider)
+    val separationComponentAdjustment = new FlowPanel(new Label("Separation component weight: "), separationComponentSlider)
+    val containmentComponentAdjustment = new FlowPanel(new Label("Containment component weight: "), containmentComponentSlider)
     contents += speedAdjustment
     contents += searchRadiusAdjustment
+    contents += seekingComponentAdjustment
+    contents += separationComponentAdjustment
+    contents += containmentComponentAdjustment
   }
 
   def redrawer = new ActionListener {
@@ -118,6 +172,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   this.listenTo(resetButton)
   this.listenTo(speedSlider)
   this.listenTo(searchRadiusSlider)
+  this.listenTo(seekingComponentSlider)
+  this.listenTo(separationComponentSlider)
+  this.listenTo(containmentComponentSlider)
   this.reactions += {
     case clickEvent: ButtonClicked =>
       val clickedButton = clickEvent.source
@@ -135,11 +192,21 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
           if (!slider.adjusting) {
             room.setMaxSpeed(slider.value.toDouble * 0.005)
           }
-
-
         case s if s == searchRadiusSlider =>
           if (!slider.adjusting) {
              room.setSearchRadius(slider.value.toDouble)
+          }
+        case s if s == seekingComponentSlider =>
+          if (!slider.adjusting) {
+             room.setLogicParameters(Map("seekingWeight" -> slider.value.toDouble))
+          }
+        case s if s == separationComponentSlider =>
+          if (!slider.adjusting) {
+             room.setLogicParameters(Map("separationWeight" -> slider.value.toDouble))
+          }
+        case s if s == containmentComponentSlider =>
+          if (!slider.adjusting) {
+             room.setLogicParameters(Map("containmentWeight" -> slider.value.toDouble))
           }
       }
 

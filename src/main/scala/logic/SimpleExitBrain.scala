@@ -3,8 +3,21 @@ package logic
 class SimpleExitBrain(body: PersonBody) extends PersonBrain(body) {
 
   var seekingWeight: Double = 20.0
-  var separationWeight: Double = 90.0
-  var containmentWeight: Double = 40.0
+  var separationWeight: Double = 120.0
+  var containmentWeight: Double = 30.0
+
+  override def setLogicParameters(params: Map[String, Double]): Unit = {
+    def processParameter(param: (String, Double)): Unit = {
+      param._1 match {
+        case "seekingWeight" => seekingWeight = param._2
+        case "separationWeight" => separationWeight = param._2
+        case "containmentWeight" => containmentWeight = param._2
+        case _ =>
+      }
+    }
+
+    params.toList.foreach( processParameter(_) )
+  }
 
   private def seekingComponent: Vector2d = {
     val goalLocation = body.getExitMiddle

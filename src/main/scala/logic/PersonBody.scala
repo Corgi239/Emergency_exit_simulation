@@ -14,6 +14,7 @@ class PersonBody(var location: Vector2d, room: Room) {
 
   def maxSpeed = maxSpd
   def setMaxSpeed(updMaxSpd: Double) = maxSpd = updMaxSpd
+  def setMaxAcceleration(updAcc: Double) = maxAcc = updAcc
   def setSearchRadius(updRadius: Double) = searchRadius = updRadius
   def setLogicParameters(params: Map[String, Double]) = {
     brain match {

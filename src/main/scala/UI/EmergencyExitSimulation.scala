@@ -15,7 +15,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val roomHeight = 600
   private val margin = 10
   private val headerBarHeight = 30
-  private val buttonsBarHeight = 30
+  private val buttonsBarHeight = 120
   private val adjusterWidth = 420
 
   private val timeDelta = 30
@@ -39,11 +39,11 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   )
 */
 
-  private val testCoords = (((120 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
+  private val defaultCoords = (((120 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
 
-  private var room = Room(testCoords, roomWidth, roomHeight)
+  private var room = Room(defaultCoords, roomWidth, roomHeight)
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
-  resetSimulation()
+  restartSimulation()
 
   private def resetSimulation() = {
     val config = room.config
@@ -75,6 +75,22 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         labelTable += min    -> new Label("slow")
         labelTable += (max - min + 1) / 2  -> new Label("meduim")
         labelTable += max        -> new Label("fast")
+
+        labels = labelTable
+        paintLabels = true
+  }
+  val accelerationSlider = new Slider {
+        orientation = Orientation.Horizontal
+        min   = 0
+        max   = 10
+        value = (room.config.maxAcc * 50000).toInt
+        majorTickSpacing = 1
+        paintTicks = true
+
+        val labelTable = mutable.HashMap[Int, Label]()
+        labelTable += min    -> new Label("low")
+        labelTable += (max - min + 1) / 2  -> new Label("meduim")
+        labelTable += max        -> new Label("high")
 
         labels = labelTable
         paintLabels = true
@@ -160,17 +176,25 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   }
   val parameterAdjustment = new BoxPanel(Orientation.Vertical) {
     val speedAdjustment = new FlowPanel(new Label("Maximum speed: "), speedSlider)
+    val accelerationAdjustment = new FlowPanel(new Label("Maneuverability: "), accelerationSlider)
     val searchRadiusAdjustment = new FlowPanel(new Label("Search radius: "), searchRadiusSlider)
     val seekingComponentAdjustment = new FlowPanel(new Label("Seeking component weight: "), seekingComponentSlider)
     val separationComponentAdjustment = new FlowPanel(new Label("Separation component weight: "), separationComponentSlider)
     val containmentComponentAdjustment = new FlowPanel(new Label("Containment component weight: "), containmentComponentSlider)
-    val exitSizeAdjustment = new FlowPanel(new Label("Exit size (as % of the right wall: "), exitSizeSlider)
+    val exitSizeAdjustment = new FlowPanel(new Label("Exit size (as % of the right wall): "), exitSizeSlider)
     contents += speedAdjustment
+    contents += accelerationAdjustment
     contents += searchRadiusAdjustment
     contents += seekingComponentAdjustment
     contents += separationComponentAdjustment
     contents += containmentComponentAdjustment
     contents += exitSizeAdjustment
+  }
+  val simulationControls = new BoxPanel(Orientation.Vertical) {
+    val densityAdjustment = new FlowPanel(new Label("Density: "), densitySlider)
+    val resetWithRandomControls = new FlowPanel(resetSimulationWithRandomButton, densityAdjustment)
+    contents += restartButton
+    contents += resetWithRandomControls
   }
 
   def redrawer = new ActionListener {
@@ -189,6 +213,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   val updatingTimer = new javax.swing.Timer(timeDelta, updater)
   this.listenTo(resetButton)
   this.listenTo(speedSlider)
+  this.listenTo(accelerationSlider)
   this.listenTo(searchRadiusSlider)
   this.listenTo(seekingComponentSlider)
   this.listenTo(separationComponentSlider)
@@ -211,6 +236,10 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
           if (!slider.adjusting) {
             room.setMaxSpeed(slider.value.toDouble * 0.005)
           }
+        case s if s == accelerationSlider =>
+          if (!slider.adjusting) {
+            room.setMaxAcceleration(slider.value.toDouble * 0.00002)
+          }
         case s if s == searchRadiusSlider =>
           if (!slider.adjusting) {
              room.setSearchRadius(slider.value.toDouble)
@@ -230,6 +259,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         case s if s == exitSizeSlider =>
           if (!slider.adjusting) {
              room.setExitSize(slider.value.toDouble / 100)
+             room.setExitLocation(Vector2d(room.config.roomWidth, room.config.roomHeight * (0.5 - room.config.exitSize / 2)))
           }
       }
 

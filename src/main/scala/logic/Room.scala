@@ -2,10 +2,11 @@ package logic
 
 import scala.collection.mutable
 import scala.collection.parallel.CollectionConverters._
+import scala.util.Random
 
-class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
+class Room(val config: RoomConfig) {
 
-  var people: mutable.Buffer[PersonBody] = coords.map(p => Vector2d(p._1, p._2) ).map( new PersonBody(_, this) ).toBuffer
+  var people: mutable.Buffer[PersonBody] = config.startingCoords.map(p => Vector2d(p._1, p._2) ).map( new PersonBody(_, this) ).toBuffer
 
   def init() = {
     people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
@@ -21,6 +22,10 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
     config.maxSpeed = updSpeed
     people.foreach( _.setMaxSpeed(updSpeed) )
   }
+  def setMaxAcceleration(updAcc: Double) = {
+    config.maxAcc = updAcc
+    people.foreach( _.setMaxAcceleration(updAcc) )
+  }
   def setSearchRadius(updRadius: Double) = {
     config.searchRadius = updRadius
     people.foreach( _.setSearchRadius(updRadius) )
@@ -32,6 +37,10 @@ class Room(coords: Vector[(Double, Double)], val config: RoomConfig) {
 
   def setExitSize(updSize: Double) = {
     config.exitSize = updSize
+  }
+
+  def setExitLocation(updLocation: Vector2d) = {
+    config.exitLocation = updLocation
   }
 
   def step(timePassed: Double) = {

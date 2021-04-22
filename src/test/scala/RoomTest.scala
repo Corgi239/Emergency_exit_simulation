@@ -15,7 +15,7 @@ class RoomTest extends AnyFlatSpec with Matchers {
     }
   }
 
-  val room = new Room(Vector[(Double, Double)](), new RoomConfig(100, 100, Vector2d(100, 45), 10))
+  val room = new Room(RoomConfig(Vector[(Double, Double)](), 100, 100, 0.1, Vector2d(100, 45)))
 
   "Room" should "calculate the Boundry Normal correctly" in {
     assert(room.getBoundaryNormal(Vector2d(-1, -1)) === Vector2d(1, 1).normalize())

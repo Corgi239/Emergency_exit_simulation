@@ -45,24 +45,47 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
   restartSimulation()
 
-  private def resetSimulation() = {
+  private def restartSimulation() = {
     val config = room.config
-    this.room = new Room(testCoords, config)
+    this.room = new Room(config)
     room.init()
-    println("Reset\n" + config.toString)
+  }
+
+  private def resetSimulationWithRandomStart(density: Double, seed: Int = 42) = {
+     val config = room.config
+    config.generateRandomStartingCoords(density, seed)
+    this.room = new Room(config)
+    room.init()
   }
 
   def top = new MainFrame {
     title = "Emergency Exit Simulation"
     contents = new BorderPanel {
-      add(resetButton, BorderPanel.Position.South)
+      add(simulationControls, BorderPanel.Position.South)
       add(simulationPanel, BorderPanel.Position.Center)
       add(parameterAdjustment, BorderPanel.Position.East)
     }
     size = new Dimension(roomWidth + margin * 2 + adjusterWidth, roomHeight + margin * 2 + headerBarHeight + buttonsBarHeight)
   }
 
-  val resetButton = new Button("Reset simulation")
+  val restartButton = new Button("Restart simulation")
+  val resetSimulationWithRandomButton = new Button("Reset simulation with random distribution of people")
+  val densitySlider = new Slider {
+        orientation = Orientation.Horizontal
+        min   = 0
+        max   = 100
+        value = 50
+        majorTickSpacing = 20
+        paintTicks = true
+
+        val labelTable = mutable.HashMap[Int, Label]()
+        labelTable += min    -> new Label("sparse")
+        labelTable += (max - min + 1) / 2  -> new Label("meduim")
+        labelTable += max        -> new Label("dense")
+
+        labels = labelTable
+        paintLabels = true
+  }
   val speedSlider = new Slider {
         orientation = Orientation.Horizontal
         min   = 0
@@ -211,7 +234,8 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   val drawingTimer = new javax.swing.Timer(1000 / fps, redrawer)
   val updatingTimer = new javax.swing.Timer(timeDelta, updater)
-  this.listenTo(resetButton)
+  this.listenTo(restartButton)
+  this.listenTo(resetSimulationWithRandomButton)
   this.listenTo(speedSlider)
   this.listenTo(accelerationSlider)
   this.listenTo(searchRadiusSlider)
@@ -223,9 +247,13 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     case clickEvent: ButtonClicked =>
       val clickedButton = clickEvent.source
       clickedButton match {
-        case resetButton =>
+        case b if b == restartButton =>
           updatingTimer.stop()
-          this.resetSimulation()
+          this.restartSimulation()
+          updatingTimer.start()
+        case b if b == resetSimulationWithRandomButton =>
+          updatingTimer.stop()
+          this.resetSimulationWithRandomStart(densitySlider.value.toDouble / 1000)
           updatingTimer.start()
       }
     case valueChange: ValueChanged =>

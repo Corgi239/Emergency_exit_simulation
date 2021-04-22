@@ -75,20 +75,45 @@ class Room(val config: RoomConfig) {
 
 object Room {
 
-  def apply(coords: Vector[(Double, Double)], roomWidth: Double, roomHeight: Double, exitSize: Double = 0.05): Room = {
-    new Room(coords, new RoomConfig(roomWidth, roomHeight, Vector2d(roomWidth, roomHeight * (0.5 - exitSize / 2)), exitSize))
+  def apply(coords: Vector[(Double, Double)], roomWidth: Double, roomHeight: Double): Room = {
+    new Room(RoomConfig(coords, roomWidth, roomHeight))
   }
 
 }
 
-class RoomConfig(val roomWidth: Double,
+class RoomConfig(var startingCoords: Vector[(Double, Double)],
+                 val roomWidth: Double,
                  val roomHeight: Double,
-                 val exitLocation: Vector2d,
-                 var exitSize: Double = 0.05,
-                 var maxSpeed: Double = 0.05,
-                 var searchRadius: Double = 25.0,
-                 var seekingWeight: Double = 20.0,
-                 var separationWeight: Double = 120.0,
-                 var containmentWeight: Double = 30.0) {
+                 var exitSize: Double,
+                 var exitLocation: Vector2d,
+                 var maxSpeed: Double,
+                 var maxAcc: Double,
+                 var searchRadius: Double,
+                 var seekingWeight: Double,
+                 var separationWeight: Double,
+                 var containmentWeight: Double) {
   override def toString: String = "Current room settings:\n" + s"Dimentions: ${roomWidth}x${roomHeight}\nExit of length $exitSize at $exitLocation\nMax speed: $maxSpeed\nSearch radius: $searchRadius"
+
+  def generateRandomStartingCoords(density: Double, seed: Int) = {
+    val r = new Random(seed)
+    val numberOfPeople = (roomHeight * roomWidth * density / 100).toInt
+    val newCoords = for (i <- 1 to numberOfPeople) yield (r.nextDouble() * roomWidth, r.nextDouble() * roomHeight)
+    startingCoords = newCoords.toVector
+  }
+}
+
+object RoomConfig {
+  def apply(startingCoords: Vector[(Double, Double)],
+            roomWidth: Double,
+            roomHeight: Double,
+            exitSize: Double = 0.05,
+            exitLocation: Vector2d = Vector2d(0, 0),
+            maxSpeed: Double = 0.05,
+            maxAcc: Double = 0.0001,
+            searchRadius: Double = 25.0,
+            seekingWeight: Double = 20.0,
+            separationWeight: Double = 120.0,
+            containmentWeight: Double = 30.0) = {
+    new RoomConfig(startingCoords, roomWidth, roomHeight, exitSize, if (exitLocation.coordinates == (0, 0)) Vector2d(roomWidth, roomHeight * (0.5 - exitSize / 2)) else exitLocation, maxSpeed, maxAcc, searchRadius, seekingWeight, separationWeight, containmentWeight)
+  }
 }

@@ -22,7 +22,7 @@ class PersonBody(var location: Vector2d, room: Room) {
     }
   }
 
-  def getExitMiddle = room.exitMiddle
+  def getExitTarget = room.exitMiddle + Vector2d(room.config.exitSize * room.config.roomHeight * 0.1, 0)
 
   def getNeighbors = room.neighbors(this.location, searchRadius)
   def getNeighborsInfront = {

@@ -20,7 +20,7 @@ class SimpleExitBrain(body: PersonBody) extends PersonBrain(body) {
   }
 
   private def seekingComponent: Vector2d = {
-    val goalLocation = body.getExitMiddle
+    val goalLocation = body.getExitTarget
     (goalLocation - body.location).normalize()
   }
 

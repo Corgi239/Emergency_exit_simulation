@@ -41,7 +41,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private val defaultCoords = (((120 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
 
-  private var room = Room(defaultCoords, roomWidth, roomHeight)
+  private var room = new Room(RoomConfig.createFromFile("src/test/testConfigFile"))
   room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
   restartSimulation()
 
@@ -65,7 +65,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
       add(simulationPanel, BorderPanel.Position.Center)
       add(parameterAdjustment, BorderPanel.Position.East)
     }
-    size = new Dimension(roomWidth + margin * 2 + adjusterWidth, roomHeight + margin * 2 + headerBarHeight + buttonsBarHeight)
+
+    minimumSize = new Dimension(simulationControls.size.width + simulationPanel.size.width,
+                                simulationControls.size.height + Math.max(parameterAdjustment.size.height + 20, simulationPanel.size.height + 50))
   }
 
   val restartButton = new Button("Restart simulation")
@@ -314,11 +316,13 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     override def paintComponent(g: Graphics2D) = {
       g.translate(margin, margin)
       g.setColor(Color.black)
-      g.drawRect(0, 0, roomWidth, roomHeight)
+      g.drawRect(0, 0, room.config.roomWidth.toInt, room.config.roomHeight.toInt)
       g.setColor(Color.red)
       g.drawLine(room.config.exitLocation.x.toInt, room.config.exitLocation.y.toInt, room.config.exitLocation.x.toInt, (room.config.exitLocation.y + room.config.exitSize * room.config.roomHeight).toInt)
       room.people.foreach( drawPerson(g, _) )
       g.translate(-margin, -margin)
     }
+
+    override def size: Dimension = new Dimension(room.config.roomWidth.toInt, room.config.roomHeight.toInt)
   }
 }

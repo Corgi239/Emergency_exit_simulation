@@ -1,5 +1,6 @@
 package logic
 
+import IO._
 import scala.collection.mutable
 import scala.collection.parallel.CollectionConverters._
 import scala.util.Random
@@ -12,6 +13,8 @@ class Room(val config: RoomConfig) {
     people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
     setMaxSpeed(config.maxSpeed)
     setSearchRadius(config.searchRadius)
+    setSearchRadius(config.searchRadius)
+    setLogicParameters(Map("seekingWeight" -> config.seekingWeight, "separationWeight" -> config.separationWeight, "containmentWeight" -> config.separationWeight))
   }
 
   def coordinateList = people.map( _.location.coordinates )
@@ -115,5 +118,9 @@ object RoomConfig {
             separationWeight: Double = 120.0,
             containmentWeight: Double = 30.0) = {
     new RoomConfig(startingCoords, roomWidth, roomHeight, exitSize, if (exitLocation.coordinates == (0, 0)) Vector2d(roomWidth, roomHeight * (0.5 - exitSize / 2)) else exitLocation, maxSpeed, maxAcc, searchRadius, seekingWeight, separationWeight, containmentWeight)
+  }
+
+  def createFromFile(filepath: String): RoomConfig = {
+    new ConfigBuilder(filepath).build()
   }
 }

@@ -1,0 +1,23 @@
+#room_width
+  1000.0
+#room_height
+  1000.0
+#exit_size
+  0.1
+#exit_location_proportion
+  0.8
+#max_speed
+  0.05
+#max_acc
+  0.0001
+#search_radius
+  25.0
+#seeking_weight
+  20.0
+#separation_weight
+  120.0
+#containment_weight
+  30.0
+#coords
+  2.0   , 2.0
+  10.5  , 98.1

@@ -76,7 +76,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   val restartButton = new Button("Restart simulation") {
     tooltip = "Start the simulation over while retaining any settings"
   }
-  val resetSimulationWithRandomButton = new Button("Reset simulation with random distribution of people")
+  val resetSimulationWithRandomButton = new Button("Reset simulation with random distribution of people") {
+    tooltip = "Reset the simulation using a randomly generated distribution of people across the room"
+  }
   val densitySlider = new Slider {
         orientation = Orientation.Horizontal
         min   = 0
@@ -93,7 +95,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         labels = labelTable
         paintLabels = true
   }
-  val resetFromFileButton = new Button("Restart the simulation from a config file")
+  val resetFromFileButton = new Button("Start the simulation from a configuration file") {
+    tooltip = "Start the simulation using the settings specified in a configuration file"
+  }
   val speedSlider = new Slider {
         orientation = Orientation.Horizontal
         min   = 0
@@ -206,13 +210,13 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         paintLabels = true
   }
   val parameterAdjustment = new BoxPanel(Orientation.Vertical) {
-    val speedAdjustment = new FlowPanel(new Label("Maximum speed: "), speedSlider)
-    val accelerationAdjustment = new FlowPanel(new Label("Maneuverability: "), accelerationSlider)
-    val searchRadiusAdjustment = new FlowPanel(new Label("Search radius: "), searchRadiusSlider)
-    val seekingComponentAdjustment = new FlowPanel(new Label("Seeking component weight: "), seekingComponentSlider)
-    val separationComponentAdjustment = new FlowPanel(new Label("Separation component weight: "), separationComponentSlider)
-    val containmentComponentAdjustment = new FlowPanel(new Label("Containment component weight: "), containmentComponentSlider)
-    val exitSizeAdjustment = new FlowPanel(new Label("Relative exit size: "), exitSizeSlider)
+    val speedAdjustment = new FlowPanel(new Label("Maximum speed: "){tooltip = "Adjust the maximum speed a person can achieve"}, speedSlider)
+    val accelerationAdjustment = new FlowPanel(new Label("Maneuverability: "){tooltip = "Adjust how quickly a person can change its velocity"}, accelerationSlider)
+    val searchRadiusAdjustment = new FlowPanel(new Label("Search radius: "){tooltip = "Adjust how far a person will look when determining its neighbors"}, searchRadiusSlider)
+    val seekingComponentAdjustment = new FlowPanel(new Label("Seeking component weight: "){tooltip = "Adjust the extent to which the seeking behaviour influences a person's velocity"}, seekingComponentSlider)
+    val separationComponentAdjustment = new FlowPanel(new Label("Separation component weight: "){tooltip = "Adjust the extent to which the separation behaviour influences a person's velocity"}, separationComponentSlider)
+    val containmentComponentAdjustment = new FlowPanel(new Label("Containment component weight: "){tooltip = "Adjust the extent to which the containment behaviour influences a person's velocity"}, containmentComponentSlider)
+    val exitSizeAdjustment = new FlowPanel(new Label("Relative exit size: "){tooltip = "Adjust size of the exit relative to the dimentions of the room"}, exitSizeSlider)
     contents += speedAdjustment
     contents += accelerationAdjustment
     contents += searchRadiusAdjustment
@@ -223,7 +227,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   }
   val simulationControls = new BoxPanel(Orientation.Vertical) {
-    val densityAdjustment = new FlowPanel(new Label("Density: "), densitySlider)
+    val densityAdjustment = new FlowPanel(new Label("Density: "){tooltip = "Adjust how densly the room will be populated when the reset button is pressed"}, densitySlider)
     val resetWithRandomControls = new FlowPanel(resetSimulationWithRandomButton, densityAdjustment)
     contents += restartButton
     contents += resetWithRandomControls

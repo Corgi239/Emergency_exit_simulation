@@ -51,7 +51,8 @@ class PersonBody(var location: Vector2d, room: Room) {
   def move(timePassed: Double) = {
     location += currentVelocity * timePassed * brakingCoefficient
     if (room.getBoundaryNormal(this.location) != Vector2d(0, 0)) {
-      this.location.x = Math.min(this.location.x, room.config.roomWidth - 0.1)
+      this.location.x = Math.max(Math.min(this.location.x, room.config.roomWidth - 0.1), 0.1)
+      this.location.y = Math.max(Math.min(this.location.y, room.config.roomHeight - 0.1), 0.1)
     }
   }
 

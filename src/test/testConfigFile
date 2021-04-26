@@ -2,10 +2,10 @@
   50.0
 #room_height
   600.0
-#exit_size
+#relative_exit_size
   0.01
-#exit_location_proportion
-  0.8
+#exit_location
+  400.0
 #max_speed
   0.05
 #max_acc

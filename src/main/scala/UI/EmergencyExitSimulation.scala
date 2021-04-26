@@ -73,7 +73,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
                          simulationControls.size.height + Math.max(parameterAdjustment.size.height + 50, simulationPanel.size.height + 70))
   }
 
-  val restartButton = new Button("Restart simulation")
+  val restartButton = new Button("Restart simulation") {
+    tooltip = "Start the simulation over while retaining any settings"
+  }
   val resetSimulationWithRandomButton = new Button("Reset simulation with random distribution of people")
   val densitySlider = new Slider {
         orientation = Orientation.Horizontal
@@ -189,16 +191,16 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   }
   val exitSizeSlider = new Slider {
         orientation = Orientation.Horizontal
-        min   = 5
+        min   = 0
         max   = 50
         value = (room.config.exitSize * 100).toInt
         majorTickSpacing = 5
         paintTicks = true
 
         val labelTable = mutable.HashMap[Int, Label]()
-        labelTable += min    -> new Label("5%")
-        labelTable += 50     -> new Label("25%")
-        labelTable += max    -> new Label("50%")
+        labelTable += min               -> new Label("0%")
+        labelTable += (min + max)/2     -> new Label("25%")
+        labelTable += max               -> new Label("50%")
 
         labels = labelTable
         paintLabels = true
@@ -210,7 +212,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     val seekingComponentAdjustment = new FlowPanel(new Label("Seeking component weight: "), seekingComponentSlider)
     val separationComponentAdjustment = new FlowPanel(new Label("Separation component weight: "), separationComponentSlider)
     val containmentComponentAdjustment = new FlowPanel(new Label("Containment component weight: "), containmentComponentSlider)
-    val exitSizeAdjustment = new FlowPanel(new Label("Exit size (as % of the right wall): "), exitSizeSlider)
+    val exitSizeAdjustment = new FlowPanel(new Label("Relative exit size: "), exitSizeSlider)
     contents += speedAdjustment
     contents += accelerationAdjustment
     contents += searchRadiusAdjustment
@@ -303,7 +305,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         case s if s == exitSizeSlider =>
           if (!slider.adjusting) {
              room.setExitSize(slider.value.toDouble / 100)
-             room.setExitLocation(Vector2d(room.config.roomWidth, room.config.roomHeight * (0.5 - room.config.exitSize / 2)))
+             //room.setExitLocation(Vector2d(room.config.roomWidth, room.config.roomHeight * (0.5 - room.config.exitSize / 2)))
           }
       }
 

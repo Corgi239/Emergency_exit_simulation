@@ -56,7 +56,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   val restartButton = new Button("Restart simulation") {
     tooltip = "Start the simulation over while retaining any settings"
   }
-  val resetSimulationWithRandomButton = new Button("Reset simulation with random distribution of people") {
+  val resetSimulationWithRandomButton = new Button("Start simulation with random distribution of people") {
     tooltip = "Reset the simulation using a randomly generated distribution of people across the room"
   }
   val densitySlider = new Slider {
@@ -75,7 +75,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         labels = labelTable
         paintLabels = true
   }
-  val resetFromFileButton = new Button("Start the simulation from a configuration file") {
+  val resetFromFileButton = new Button("Start simulation from configuration file") {
     tooltip = "Start the simulation using the settings specified in a configuration file"
   }
   val speedSlider = new Slider {

@@ -3,14 +3,14 @@ package logic
 class PersonBody(var location: Vector2d, room: Room) {
 
   private var brain: Option[PersonBrain] = None
-  private var currentVelocity: Vector2d = Vector2d(1, 0)
+  private var currentVelocity: Vector2d = Vector2d(0.0001, 0)
   private var brakingCoefficient: Double = 1.0
 
   private var maxAcc: Double = 0.0001
   private var maxSpd: Double = 0.05
   private var searchRadius = 25.0 + 5
   private val containmentProbeDistance = 5.0
-  private val fov = 30.0
+  private val fov = 5.0
 
   def maxSpeed = maxSpd
   def setMaxSpeed(updMaxSpd: Double) = maxSpd = updMaxSpd

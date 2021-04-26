@@ -4,19 +4,15 @@ import logic._
 
 import java.awt.Color
 import java.awt.event.{ActionEvent, ActionListener}
+import java.io.File
 import scala.collection.mutable
+import scala.swing.Swing.EmptyBorder
 import scala.swing._
 import scala.swing.event.{ButtonClicked, ValueChanged}
+import scala.util.Random
 
 
 object EmergencyExitSimulation extends SimpleSwingApplication{
-
-  private val roomWidth = 800
-  private val roomHeight = 600
-  private val margin = 10
-  private val headerBarHeight = 30
-  private val buttonsBarHeight = 120
-  private val adjusterWidth = 420
 
   private val timeDelta = 30
   private val fps = 60
@@ -41,8 +37,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private val defaultCoords = (((120 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
 
-  private var room = new Room(RoomConfig.createFromFile("src/test/testConfigFile"))
-  room.people.foreach( b => b.giveBrain(new SimpleExitBrain(b)) )
+  private var room = Room(Vector[(Double, Double)](), 800.0, 600.0)
   restartSimulation()
 
   private def restartSimulation() = {
@@ -58,16 +53,24 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     room.init()
   }
 
+  private def resetSimulationFromFile(filepath: String) = {
+    val config = RoomConfig.createFromFile(filepath)
+    this.room = new Room(config)
+    room.init()
+  }
+
   def top = new MainFrame {
     title = "Emergency Exit Simulation"
     contents = new BorderPanel {
       add(simulationControls, BorderPanel.Position.South)
       add(simulationPanel, BorderPanel.Position.Center)
       add(parameterAdjustment, BorderPanel.Position.East)
+
+      border = EmptyBorder(10)
     }
 
-    minimumSize = new Dimension(simulationControls.size.width + simulationPanel.size.width,
-                                simulationControls.size.height + Math.max(parameterAdjustment.size.height + 20, simulationPanel.size.height + 50))
+    size = new Dimension(Math.max(parameterAdjustment.size.width + simulationPanel.size.width + 40, simulationControls.size.width + 30),
+                         simulationControls.size.height + Math.max(parameterAdjustment.size.height + 50, simulationPanel.size.height + 70))
   }
 
   val restartButton = new Button("Restart simulation")
@@ -88,6 +91,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         labels = labelTable
         paintLabels = true
   }
+  val resetFromFileButton = new Button("Restart the simulation from a config file")
   val speedSlider = new Slider {
         orientation = Orientation.Horizontal
         min   = 0
@@ -214,12 +218,15 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     contents += separationComponentAdjustment
     contents += containmentComponentAdjustment
     contents += exitSizeAdjustment
+
   }
   val simulationControls = new BoxPanel(Orientation.Vertical) {
     val densityAdjustment = new FlowPanel(new Label("Density: "), densitySlider)
     val resetWithRandomControls = new FlowPanel(resetSimulationWithRandomButton, densityAdjustment)
     contents += restartButton
     contents += resetWithRandomControls
+    contents += resetFromFileButton
+
   }
 
   def redrawer = new ActionListener {
@@ -239,6 +246,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   this.listenTo(restartButton)
   this.listenTo(resetSimulationWithRandomButton)
   this.listenTo(speedSlider)
+  this.listenTo(resetFromFileButton)
   this.listenTo(accelerationSlider)
   this.listenTo(searchRadiusSlider)
   this.listenTo(seekingComponentSlider)
@@ -255,7 +263,13 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
           updatingTimer.start()
         case b if b == resetSimulationWithRandomButton =>
           updatingTimer.stop()
-          this.resetSimulationWithRandomStart(densitySlider.value.toDouble / 1000)
+          this.resetSimulationWithRandomStart(densitySlider.value.toDouble / 1000, Random.nextInt())
+          updatingTimer.start()
+        case b if b == resetFromFileButton =>
+          updatingTimer.stop()
+          val chooser = new FileChooser(new File("."))
+          chooser.showOpenDialog(null)
+          this.resetSimulationFromFile(chooser.selectedFile.getAbsolutePath)
           updatingTimer.start()
       }
     case valueChange: ValueChanged =>
@@ -314,13 +328,13 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private val simulationPanel = new Panel {
     override def paintComponent(g: Graphics2D) = {
-      g.translate(margin, margin)
+      //g.translate(margin, margin)
       g.setColor(Color.black)
       g.drawRect(0, 0, room.config.roomWidth.toInt, room.config.roomHeight.toInt)
       g.setColor(Color.red)
       g.drawLine(room.config.exitLocation.x.toInt, room.config.exitLocation.y.toInt, room.config.exitLocation.x.toInt, (room.config.exitLocation.y + room.config.exitSize * room.config.roomHeight).toInt)
       room.people.foreach( drawPerson(g, _) )
-      g.translate(-margin, -margin)
+      //g.translate(-margin, -margin)
     }
 
     override def size: Dimension = new Dimension(room.config.roomWidth.toInt, room.config.roomHeight.toInt)

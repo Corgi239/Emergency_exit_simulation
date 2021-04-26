@@ -50,6 +50,7 @@ class ConfigBuilder(filepath: String) {
             }
         }
       }
+      source.close()
       if (params.exists( _._2.isEmpty )) throw new CorruptedConfigFileException("Some of the parameters were not specified in the config file.")
       RoomConfig(
         coords.toVector,

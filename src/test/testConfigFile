@@ -1,9 +1,9 @@
 #room_width
-  1000.0
+  50.0
 #room_height
-  1000.0
+  600.0
 #exit_size
-  0.1
+  0.01
 #exit_location_proportion
   0.8
 #max_speed
@@ -20,4 +20,4 @@
   30.0
 #coords
   2.0   , 2.0
-  10.5  , 98.1
+  10.5  , 28.1

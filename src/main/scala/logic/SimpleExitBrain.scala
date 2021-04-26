@@ -15,7 +15,6 @@ class SimpleExitBrain(body: PersonBody) extends PersonBrain(body) {
         case _ =>
       }
     }
-
     params.toList.foreach( processParameter(_) )
   }
 
@@ -25,11 +24,8 @@ class SimpleExitBrain(body: PersonBody) extends PersonBrain(body) {
   }
 
   private def separationComponent: Vector2d = {
-
     def scalingFunction(dist: Double): Double = 1.0 / math.pow(dist, 2)
-
     body.getNeighbors.map( p => (body.location - p._1.location) * scalingFunction(p._2)).foldLeft(Vector2d(0, 0))( _ + _ )
-
   }
 
   private def containmentComponent: Vector2d = body.getContainmentNormal

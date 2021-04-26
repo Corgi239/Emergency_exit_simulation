@@ -17,26 +17,6 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   private val timeDelta = 30
   private val fps = 60
 
-/*
-  private val testCoords = Vector(
-    (20.0, 20.0),
-    (22.0, 22.0),
-    (19.0, 18.0),
-    (17.0, 24.0),
-    (15.0, 35.0),
-    (24.0, 14.0),
-    (30.0, 20.0),
-    (40.0, 20.0),
-    (40.0, 80.0),
-    (50.0, 120.0),
-    (350.0, 200.0),
-    (700.0, 100.0),
-    (550.0, 380.0)
-  )
-*/
-
-  private val defaultCoords = (((120 to 710 by 30)).map( _.toDouble ).flatMap( i => (((30 to 500 by 30)).map( _.toDouble ).map( j => (i, j) )))).toVector
-
   private var room = Room(Vector[(Double, Double)](), 800.0, 600.0)
   restartSimulation()
 
@@ -232,7 +212,6 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     contents += restartButton
     contents += resetWithRandomControls
     contents += resetFromFileButton
-
   }
 
   def redrawer = new ActionListener {
@@ -309,7 +288,6 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         case s if s == exitSizeSlider =>
           if (!slider.adjusting) {
              room.setExitSize(slider.value.toDouble / 100)
-             //room.setExitLocation(Vector2d(room.config.roomWidth, room.config.roomHeight * (0.5 - room.config.exitSize / 2)))
           }
       }
 
@@ -334,13 +312,11 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private val simulationPanel = new Panel {
     override def paintComponent(g: Graphics2D) = {
-      //g.translate(margin, margin)
       g.setColor(Color.black)
       g.drawRect(0, 0, room.config.roomWidth.toInt, room.config.roomHeight.toInt)
       g.setColor(Color.red)
       g.drawLine(room.config.exitLocation.x.toInt, room.config.exitLocation.y.toInt, room.config.exitLocation.x.toInt, (room.config.exitLocation.y + room.config.exitSize * room.config.roomHeight).toInt)
       room.people.foreach( drawPerson(g, _) )
-      //g.translate(-margin, -margin)
     }
 
     override def size: Dimension = new Dimension(room.config.roomWidth.toInt, room.config.roomHeight.toInt)

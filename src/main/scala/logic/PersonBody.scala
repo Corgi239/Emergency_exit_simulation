@@ -24,7 +24,6 @@ class PersonBody(var location: Vector2d, room: Room) {
   }
 
   def getExitTarget = room.exitMiddle + Vector2d(room.config.exitSize * room.config.roomHeight * 0.1, 0)
-
   def getNeighbors = room.neighbors(this.location, searchRadius)
   def getNeighborsInfront = {
     val res = this.getNeighbors.filter( p => Math.abs(p._1.location.angleBetween(this.location)) <= fov )

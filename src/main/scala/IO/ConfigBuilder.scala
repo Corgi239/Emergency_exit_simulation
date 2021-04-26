@@ -48,6 +48,8 @@ class ConfigBuilder(filepath: String) {
               coords += ((extractDouble(data(0), "The initial coordinates datas is corrupted."), extractDouble(data(1), "The initial coordinates datas is corrupted.")))
               i += 1
             }
+          case _ =>
+            i += 1
         }
       }
       source.close()

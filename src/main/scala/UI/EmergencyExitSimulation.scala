@@ -253,8 +253,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         case b if b == resetFromFileButton =>
           updatingTimer.stop()
           val chooser = new FileChooser(new File("."))
-          chooser.showOpenDialog(null)
-          this.resetSimulationFromFile(chooser.selectedFile.getAbsolutePath)
+          //chooser.showOpenDialog(null)
+          //this.resetSimulationFromFile(chooser.selectedFile.getAbsolutePath)
+          this.resetSimulationFromFile("src/test/testConfigFile")
           updatingTimer.start()
       }
     case valueChange: ValueChanged =>

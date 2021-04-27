@@ -87,9 +87,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         paintTicks = true
 
         val labelTable = mutable.HashMap[Int, Label]()
-        labelTable += min    -> new Label("slow")
-        labelTable += (max - min + 1) / 2  -> new Label("meduim")
-        labelTable += max        -> new Label("fast")
+        labelTable += min    -> new Label("0.00")
+        labelTable += (max - min + 1) / 2  -> new Label("0.05")
+        labelTable += max        -> new Label("0.10")
 
         labels = labelTable
         paintLabels = true
@@ -103,9 +103,9 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         paintTicks = true
 
         val labelTable = mutable.HashMap[Int, Label]()
-        labelTable += min    -> new Label("low")
-        labelTable += (max - min + 1) / 2  -> new Label("meduim")
-        labelTable += max        -> new Label("high")
+        labelTable += min    -> new Label("0.0000")
+        labelTable += (max - min + 1) / 2  -> new Label("0.0001")
+        labelTable += max        -> new Label("0.0002")
 
         labels = labelTable
         paintLabels = true
@@ -119,7 +119,8 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         paintTicks = true
 
         val labelTable = mutable.HashMap[Int, Label]()
-        labelTable += min    -> new Label("5")
+        labelTable += min        -> new Label("5")
+        labelTable += 25 -> new Label("25")
         labelTable += max        -> new Label("50")
 
         labels = labelTable
@@ -253,9 +254,8 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
         case b if b == resetFromFileButton =>
           updatingTimer.stop()
           val chooser = new FileChooser(new File("."))
-          //chooser.showOpenDialog(null)
-          //this.resetSimulationFromFile(chooser.selectedFile.getAbsolutePath)
-          this.resetSimulationFromFile("src/test/testConfigFile")
+          chooser.showOpenDialog(null)
+          this.resetSimulationFromFile(chooser.selectedFile.getAbsolutePath)
           updatingTimer.start()
       }
     case valueChange: ValueChanged =>

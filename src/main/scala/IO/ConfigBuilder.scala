@@ -23,7 +23,7 @@ class ConfigBuilder(filepath: String) {
         "relative_exit_size" -> None,
         "exit_location" -> None,
         "max_speed" -> None,
-        "max_acc" -> None,
+        "max_acceleration" -> None,
         "search_radius" -> None,
         "seeking_weight" -> None,
         "separation_weight" -> None,
@@ -40,7 +40,7 @@ class ConfigBuilder(filepath: String) {
             val value = extractDouble(lines(i), s"$header data is corrupted.")
             params += ((header, Some(value)))
             i += 1
-          case "coords" =>
+          case "initial_coordinates" =>
             i += 1
             while(i < lines.length && !lines(i).startsWith("#")) {
               val data = lines(i).split(',')
@@ -61,7 +61,7 @@ class ConfigBuilder(filepath: String) {
         params("relative_exit_size").get,
         Vector2d(params("room_width").get, params("exit_location").get),
         params("max_speed").get,
-        params("max_acc").get,
+        params("max_acceleration").get,
         params("search_radius").get,
         params("seeking_weight").get,
         params("separation_weight").get,

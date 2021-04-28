@@ -192,7 +192,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   }
   val parameterAdjustment = new BoxPanel(Orientation.Vertical) {
     val speedAdjustment = new FlowPanel(new Label("Maximum speed: "){tooltip = "Adjust the maximum speed a person can achieve"}, speedSlider)
-    val accelerationAdjustment = new FlowPanel(new Label("Maneuverability: "){tooltip = "Adjust how quickly a person can change its velocity"}, accelerationSlider)
+    val accelerationAdjustment = new FlowPanel(new Label("Maximum acceleration: "){tooltip = "Adjust how quickly a person can change its velocity"}, accelerationSlider)
     val searchRadiusAdjustment = new FlowPanel(new Label("Search radius: "){tooltip = "Adjust how far a person will look when determining its neighbors"}, searchRadiusSlider)
     val seekingComponentAdjustment = new FlowPanel(new Label("Seeking component weight: "){tooltip = "Adjust the extent to which the seeking behaviour influences a person's velocity"}, seekingComponentSlider)
     val separationComponentAdjustment = new FlowPanel(new Label("Separation component weight: "){tooltip = "Adjust the extent to which the separation behaviour influences a person's velocity"}, separationComponentSlider)

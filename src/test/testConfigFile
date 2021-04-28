@@ -15,7 +15,7 @@
 #seeking_weight
   20.0
 #separation_weight
-  90.0
+  20.0
 #containment_weight
   30.0
 #initial_coordinates

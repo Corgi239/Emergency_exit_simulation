@@ -37,6 +37,7 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private def resetSimulationFromFile(filepath: String) = {
     val config = RoomConfig.createFromFile(filepath)
+    resetSliderValues(config)
     this.room = new Room(config)
     room.init()
   }
@@ -217,6 +218,16 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
     contents += resetFromFileButton
   }
 
+  def resetSliderValues(config: RoomConfig) = {
+    speedSlider.value = (config.maxSpeed * 200).toInt
+    accelerationSlider.value = (config.maxAcc * 50000).toInt
+    searchRadiusSlider.value = config.searchRadius.toInt
+    seekingComponentSlider.value = config.seekingWeight.toInt
+    separationComponentSlider.value = config.separationWeight.toInt
+    containmentComponentSlider.value = config.containmentWeight.toInt
+    exitSizeSlider.value = (config.exitSize * 100).toInt
+  }
+
   def redrawer = new ActionListener {
     override def actionPerformed(e: ActionEvent): Unit = {
       simulationPanel.repaint()
@@ -257,7 +268,8 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
           updatingTimer.stop()
           val chooser = new FileChooser(new File("."))
           chooser.showOpenDialog(null)
-          this.resetSimulationFromFile(chooser.selectedFile.getAbsolutePath)
+          val filepath = chooser.selectedFile.getAbsolutePath
+          this.resetSimulationFromFile(filepath)
           updatingTimer.start()
       }
     case valueChange: ValueChanged =>

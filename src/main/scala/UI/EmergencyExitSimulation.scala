@@ -136,8 +136,8 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
         val labelTable = mutable.HashMap[Int, Label]()
         labelTable += min    -> new Label("0")
-        labelTable += 50     -> new Label("5")
-        labelTable += max    -> new Label("10")
+        labelTable += 50     -> new Label("50")
+        labelTable += max    -> new Label("100")
 
         labels = labelTable
         paintLabels = true
@@ -145,15 +145,15 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
   val separationComponentSlider = new Slider {
         orientation = Orientation.Horizontal
         min   = 0
-        max   = 200
+        max   = 100
         value = room.config.separationWeight.toInt
-        majorTickSpacing = 20
+        majorTickSpacing = 10
         paintTicks = true
 
         val labelTable = mutable.HashMap[Int, Label]()
         labelTable += min    -> new Label("0")
-        labelTable += 100     -> new Label("5")
-        labelTable += max    -> new Label("10")
+        labelTable += 50     -> new Label("50")
+        labelTable += max    -> new Label("100")
 
         labels = labelTable
         paintLabels = true
@@ -168,8 +168,8 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
         val labelTable = mutable.HashMap[Int, Label]()
         labelTable += min    -> new Label("0")
-        labelTable += 50     -> new Label("5")
-        labelTable += max    -> new Label("10")
+        labelTable += 50     -> new Label("50")
+        labelTable += max    -> new Label("100")
 
         labels = labelTable
         paintLabels = true

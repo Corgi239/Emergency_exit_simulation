@@ -113,9 +113,9 @@ object RoomConfig {
             exitLocation: Vector2d = Vector2d(0, 0),
             maxSpeed: Double = 0.05,
             maxAcc: Double = 0.0001,
-            searchRadius: Double = 25.0,
+            searchRadius: Double = 15.0,
             seekingWeight: Double = 20.0,
-            separationWeight: Double = 120.0,
+            separationWeight: Double = 20.0,
             containmentWeight: Double = 30.0) = {
     new RoomConfig(startingCoords, roomWidth, roomHeight, exitSize, if (exitLocation.coordinates == (0, 0)) Vector2d(roomWidth, roomHeight * 0.5) else exitLocation, maxSpeed, maxAcc, searchRadius, seekingWeight, separationWeight, containmentWeight)
   }

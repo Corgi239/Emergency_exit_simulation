@@ -8,7 +8,7 @@ class PersonBody(var location: Vector2d, room: Room) {
 
   private var maxAcc: Double = 0.0001
   private var maxSpd: Double = 0.05
-  private var searchRadius = 25.0 + 5
+  private var searchRadius = 15.0
   private val containmentProbeDistance = 5.0
   private val fov = 5.0
 

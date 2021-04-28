@@ -3,7 +3,7 @@ package logic
 class SimpleExitBrain(body: PersonBody) extends PersonBrain(body) {
 
   var seekingWeight: Double = 20.0
-  var separationWeight: Double = 120.0
+  var separationWeight: Double = 20.0
   var containmentWeight: Double = 30.0
 
   override def setLogicParameters(params: Map[String, Double]): Unit = {

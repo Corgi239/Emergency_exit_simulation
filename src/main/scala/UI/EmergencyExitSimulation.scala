@@ -16,8 +16,10 @@ object EmergencyExitSimulation extends SimpleSwingApplication{
 
   private val timeDelta = 30
   private val fps = 60
+  private val defaultRoomWidth = 800.0
+  private val defaultRoomHeight = 600.0
 
-  private var room = Room(Vector[(Double, Double)](), 800.0, 600.0)
+  private var room = Room(Vector[(Double, Double)](), defaultRoomWidth, defaultRoomHeight)
   restartSimulation()
 
   private def restartSimulation() = {

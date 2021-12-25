@@ -1,4 +1,4 @@
-Welcome to Emergency Exit Simuation!
+# Welcome to Emergency Exit Simuation!
 
 This application simulates a crowd of people exiting a rectangular room through a doorway in an emergency exit situation.
 The simulation Is presented through an interactive graphical user interface, through which you can view the current positions of the simulated people, as well adjust the various parameters of the simulation.
@@ -11,7 +11,7 @@ The file is separated into 11 blocks that can be placed in arbitrary order, each
 This information must be presented as a single decimal number, or as a list of pairs of decimal numbers in the case of the initial_coordinates parameter.
 Each pair must be on its own line and the numbers within the pair must be separated by a comma. No extra lines or values must be included in the file.
 
-Description of the parameters:
+# Description of the parameters
 
 *	#room_width – the horizontal dimensions of the room
 *	#room_height – the vertical dimensions of the room
@@ -51,3 +51,9 @@ Sample configuration file:
   2.0   , 2.0
   10.5  , 28.1
 ```
+
+# How to use
+
+To lunch the simulation, first download the Emergency exit simulation-assembly-0.1.jar file (located at Emergency_exit_simulation/target/scala-2.13). You can then run the downloaded file with the following command-line prompt:
+
+`java -jar <location of the downloaded .jar file>`

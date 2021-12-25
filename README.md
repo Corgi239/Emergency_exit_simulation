@@ -1,5 +1,6 @@
-# Welcome to Emergency Exit Simuation!
+# Introduction
 
+Welcome to Emergency Exit Simuation!
 This application simulates a crowd of people exiting a rectangular room through a doorway in an emergency exit situation.
 The simulation Is presented through an interactive graphical user interface, through which you can view the current positions of the simulated people, as well adjust the various parameters of the simulation.
 The initial state of the simulation can either be generated randomly, or imported from a configuration file.
